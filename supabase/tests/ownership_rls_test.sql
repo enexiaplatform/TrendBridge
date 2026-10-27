@@ -1,0 +1,12 @@
+BEGIN;
+SELECT plan(8);
+SELECT has_table('public','projects','projects exists');
+SELECT has_table('public','research_jobs','research jobs exists');
+SELECT has_table('public','credit_ledger','credit ledger exists');
+SELECT has_index('public','projects','projects_owner_id_idx','owner filter is indexed');
+SELECT has_index('public','reports','reports_owner_id_idx','report owner filter is indexed');
+SELECT ok((SELECT relrowsecurity FROM pg_class WHERE oid='public.projects'::regclass),'projects RLS enabled');
+SELECT ok((SELECT relrowsecurity FROM pg_class WHERE oid='public.reports'::regclass),'reports RLS enabled');
+SELECT ok(not has_table_privilege('anon','public.projects','SELECT'),'anonymous users cannot read projects');
+SELECT * FROM finish();
+ROLLBACK;

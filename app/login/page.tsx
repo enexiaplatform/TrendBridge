@@ -1,0 +1,2 @@
+import Link from "next/link";import { AuthForm } from "@/components/auth-form";import { Brand } from "@/components/brand";
+export default function Login(){return <main className="auth-page"><section className="auth-brand"><Link href="/"><Brand inverse/></Link><div><h1>Ra quyết định sản phẩm với bằng chứng rõ ràng.</h1><p>Tách dữ liệu đã xác minh, giả định tài chính và đề xuất chiến lược trong cùng một không gian làm việc.</p></div><small>TrendBridge AI · Product Intelligence & Launch Platform</small></section><section className="auth-form-wrap"><AuthForm/></section></main>}

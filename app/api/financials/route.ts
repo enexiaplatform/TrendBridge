@@ -1,0 +1,2 @@
+import { NextResponse } from "next/server";import { calculateFinancials, financialInputSchema } from "@/lib/financial";
+export async function POST(request:Request){const parsed=financialInputSchema.safeParse(await request.json());if(!parsed.success)return NextResponse.json({error:"Dữ liệu tài chính không hợp lệ",details:parsed.error.flatten()},{status:400});return NextResponse.json({data:calculateFinancials(parsed.data),calculationVersion:"v1"})}

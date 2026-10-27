@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+coverage
+.env
+.env.local
+playwright-report
+test-results
+.artifacts
+supabase/.temp
+*.tsbuildinfo
