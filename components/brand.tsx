@@ -1,8 +1,8 @@
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   return (
-    <span className="brand" style={{ color: inverse ? "white" : undefined }}>
-      <span className="brand-mark" aria-hidden><i /><i /><i /></span>
-      <span>TrendBridge <small style={{ fontWeight: 500, opacity: .58 }}>AI</small></span>
+    <span className={`brand brand-official ${inverse ? "brand-inverse" : ""}`} role="img" aria-label="TrendBridge">
+      <span className="brand-symbol" aria-hidden />
+      <span className="brand-wordmark" aria-hidden />
     </span>
   );
 }

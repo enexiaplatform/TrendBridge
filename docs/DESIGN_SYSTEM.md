@@ -1,6 +1,22 @@
 # TrendBridge Design System
 
-Version 1.0 — October 2026
+Version 1.1 — October 2026
+
+## Official logo source
+
+The owner-supplied TB bridge-arrow symbol and TrendBridge wordmark are canonical. The unchanged raster master is stored at `public/brand/trendbridge-logo.png`. Do not regenerate, trace, recolor, stretch or add an AI suffix to this artwork.
+
+Compact navigation uses non-destructive CSS windows into the original symbol and wordmark on a white protective surface. Full lockup presentations retain the original composition. The source has an opaque white background; it must not be described as a transparent asset.
+
+Brand palette approximated from the supplied raster:
+
+- Logo navy: `#002B67`
+- Logo cobalt: `#005BC9`
+- Logo cyan: `#00ADEF`
+- Logo teal: `#00ABAA`
+- Gradient: cobalt → cyan → `#00C9A7`
+
+Use the gradient for brand accents and selected emphasis; keep dense content on neutral surfaces. The original wordmark remains artwork. Manrope and Inter are supporting interface fonts, not replacements for its letterforms. Brand teal and verified evidence remain distinct roles: verified status always includes an explicit icon and label.
 
 ## Product principle
 
@@ -20,7 +36,7 @@ Intelligent, precise, premium, modern and trustworthy. The visual system combine
 - Midnight navy establishes authority and anchors analytical surfaces.
 - True white protects readability and avoids a muddy enterprise aesthetic.
 - Cyan indicates interaction and active intelligence.
-- Teal is reserved for verified evidence or completed success states.
+- Brand teal represents the Bridge wordmark; evidence teal is paired with an explicit verification icon and label.
 - Amber means estimated, conditional or pending verification.
 - Red means risk, failure or destructive action.
 
