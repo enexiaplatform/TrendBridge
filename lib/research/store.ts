@@ -26,7 +26,10 @@ export class LocalResearchStore {
       this.db.exec("COMMIT"); return run;
     } catch (error) { this.db.exec("ROLLBACK"); throw error; }
   }
-  save(run: Run) { this.db.prepare("UPDATE runs SET document=? WHERE id=? AND owner_id=?").run(JSON.stringify(run),run.id,run.ownerId); }
+  save(run: Run, expectedUpdatedAt: string) {
+    const result = this.db.prepare("UPDATE runs SET document=? WHERE id=? AND owner_id=? AND json_extract(document,'$.updatedAt')=?").run(JSON.stringify(run),run.id,run.ownerId,expectedUpdatedAt);
+    if (Number(result.changes) !== 1) throw new Error("WRITE_CONFLICT");
+  }
   close() { this.db.close(); }
 }
 let local: LocalResearchStore | undefined;

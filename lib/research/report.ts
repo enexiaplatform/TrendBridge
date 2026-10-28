@@ -1,6 +1,7 @@
 import { calculateFinancials } from "@/lib/financial";
 import type { ResearchInput, ResearchOutput } from "./contract";
 import { moduleDefinitions } from "./contract";
+import type { Scenario } from "./scenarios";
 
 export function buildSnapshot(input: ResearchInput) {
   const unknowns: string[] = [];
@@ -32,10 +33,11 @@ export type Run = {
   provider: "disabled" | "fixture" | "manus";
   entitlement: "preview" | "fixture" | "paid";
   report: ResearchOutput | null;
+  scenarios?: Scenario[];
 };
 export function publicRun(run: Run) {
   const unlocked = run.entitlement === "paid" || run.entitlement === "fixture";
-  return { id: run.id, createdAt: run.createdAt, updatedAt: run.updatedAt, status: run.status, input: run.input, snapshot: run.snapshot, provider: run.provider, access: run.entitlement, report: unlocked ? run.report : null };
+  return { id: run.id, createdAt: run.createdAt, updatedAt: run.updatedAt, status: run.status, input: run.input, snapshot: run.snapshot, provider: run.provider, access: run.entitlement, report: unlocked ? run.report : null, scenarios: run.scenarios ?? [] };
 }
 export type PublicRun = ReturnType<typeof publicRun>;
 export function buildFixture(input: ResearchInput): ResearchOutput {

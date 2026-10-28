@@ -1,6 +1,7 @@
 import ExcelJS from "exceljs";
 import type { Run } from "./report";
 import { money } from "@/lib/global";
+import { scenarioSnapshot, scenarioValues } from "./scenarios";
 const escape=(v:unknown)=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]!));
 function reportHtmlBase(run:Run) {
   const f=run.snapshot.financials;
@@ -10,6 +11,10 @@ function reportHtmlBase(run:Run) {
 export function reportHtml(run:Run) {
   const table=(title:string,headers:string[],rows:unknown[][])=>`<h2>${escape(title)}</h2><table><thead><tr>${headers.map(h=>`<th>${escape(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(cell=>`<td>${escape(cell)}</td>`).join("")}</tr>`).join("")}</tbody></table>`;
   let sections="";
+  if(run.scenarios?.length) {
+    sections+=`<h2>Saved financial scenarios</h2><p>User assumptions only, not market forecasts. Currency: ${escape(run.input.currency)}; purchase currency: ${escape(run.input.costCurrency)}. Original report inputs remain unchanged.</p>`;
+    sections+=table("Scenario comparison",["Scenario","Price","Purchase cost","FX","Shipping","Acquisition","Fee rate","Contribution","Margin","Break-even","Rationale"],run.scenarios.map(s=>{const f=scenarioSnapshot(run.input,s).financials;return[s.name,money(s.values.sellingPrice,run.input.currency),money(s.values.purchaseCost,run.input.costCurrency),run.input.currency===run.input.costCurrency?1:s.values.fxRate??"Unknown",s.values.logistics??"Unknown",s.values.advertising??"Unknown",s.values.platformFeeRate===null?"Unknown":`${s.values.platformFeeRate*100}%`,money(f?.contributionProfit??null,run.input.currency),f?`${(f.contributionMargin*100).toFixed(2)}%`:"Unknown",money(f?.breakEvenPrice??null,run.input.currency),s.notes];}));
+  }
   if(run.report?.competitors?.length)sections+=table("Competitive benchmark",["Product","Configuration","Pack","Price","Match","Sources"],run.report.competitors.map(c=>[c.title,c.configuration,c.packQuantity,money(c.listedPrice,c.currency),`${c.similarity}: ${c.comparisonReason}`,c.sourceIds.join(", ")]));
   if(run.report?.suppliers?.length)sections+=table("Supplier references",["Name","Configuration","Price range","MOQ","Limitations","Sources"],run.report.suppliers.map(s=>[s.name,s.productConfiguration,`${money(s.indicativePriceMin,s.currency)} – ${money(s.indicativePriceMax,s.currency)}`,s.moq,s.limitations,s.sourceIds.join(", ")]));
   if(run.report?.risks?.length)sections+=table("Risk register",["Risk","Kind","Severity","Impact","Action","Limitations"],run.report.risks.map(r=>[r.description,r.kind,r.severity,r.impact,r.action,r.limitations]));
@@ -22,6 +27,14 @@ export async function reportWorkbook(run:Run) {
   const model=workbook.addWorksheet("Financial Model");const f=run.snapshot.financials;const i=run.input;
   model.addRows([["Financial model",i.currency],["Selling price",i.sellingPrice],["Purchase cost",i.purchaseCost],["Purchase currency",i.costCurrency],["FX (selling per purchase)",i.currency===i.costCurrency?1:i.fxRate],["Shipping and fulfillment",i.logistics],["Advertising / order",i.advertising],["Platform fee rate",i.platformFeeRate],["Contribution profit",f?{formula:"B2-B3*B5-B6-B7-B2*B8",result:f.contributionProfit}:"Unknown: complete all required inputs"],["Contribution margin",f?{formula:'IF(B2=0,0,B9/B2)',result:f.contributionMargin}:"Unknown"],["Break-even price",f?{formula:'IF(B8>=1,"Undefined",(B3*B5+B6+B7)/(1-B8))',result:f.breakEvenPrice??0}:"Unknown"]]);
   model.getCell("B8").numFmt="0.00%";model.getCell("B10").numFmt="0.00%";
+  const scenarios=workbook.addWorksheet("Financial Scenarios");
+  scenarios.addRow(["Scenario — user assumptions only","Selling currency","Purchase currency","Selling price","Purchase cost","FX selling / purchase","Shipping & fulfillment","Acquisition / order","Platform fee rate","Contribution / unit","Contribution margin","Break-even price","Rationale"]);
+  for(const s of [{name:"Original inputs",notes:"Original saved report inputs",values:scenarioValues(i)},...(run.scenarios??[])]) {
+    const f=scenarioSnapshot(i,{...s,id:"00000000-0000-4000-8000-000000000000"}).financials;
+    const n=scenarios.rowCount+1; const v=s.values;
+    scenarios.addRow([s.name,i.currency,i.costCurrency,v.sellingPrice,v.purchaseCost,i.currency===i.costCurrency?1:v.fxRate,v.logistics,v.advertising,v.platformFeeRate,f?{formula:`D${n}-E${n}*F${n}-G${n}-H${n}-D${n}*I${n}`,result:f.contributionProfit}:"Unknown",f?{formula:`IF(D${n}=0,0,J${n}/D${n})`,result:f.contributionMargin}:"Unknown",f?{formula:`(E${n}*F${n}+G${n}+H${n})/(1-I${n})`,result:f.breakEvenPrice??0}:"Unknown",s.notes]);
+    scenarios.getCell(`I${n}`).numFmt="0.00%";scenarios.getCell(`K${n}`).numFmt="0.00%";
+  }
   for(const [name,module] of [["Competitor Benchmark","competition"],["Supplier Comparison","sourcing"],["Risk Register","risks"],["Action Plan","validation"]]){const sheet=workbook.addWorksheet(name);sheet.addRow(["Finding","Kind","Implication","Limitation","Next action"]);const claims=run.report?.claims.filter(c=>c.module===module)??[];if(!claims.length)sheet.addRow(["No validated findings available"]);for(const c of claims)sheet.addRow([c.statement,c.kind,c.implication,c.limitation,c.nextAction]);}
   const evidence=workbook.addWorksheet("Research Evidence");evidence.addRow(["Source ID","URL","Title","Publisher","Retrieved at","Limitations"]);for(const s of run.report?.sources??[])evidence.addRow([s.id,s.url,s.title,s.publisher,s.retrievedAt,s.limitations]);if(!run.report?.sources.length)evidence.addRow(["No external evidence retrieved"]);
   const competitors=workbook.getWorksheet("Competitor Benchmark")!;competitors.addRow([]);competitors.addRow(["Product","Configuration","Pack quantity","Listed price","Currency","Comparability","Reason","URL","Sources"]);for(const c of run.report?.competitors??[])competitors.addRow([c.title,c.configuration,c.packQuantity,c.listedPrice,c.currency,c.similarity,c.comparisonReason,c.url,c.sourceIds.join(", ")]);

@@ -13,10 +13,17 @@ describe("Postgres migrations and privilege boundary",()=>{
       const access=await db.query<{raw:boolean;update:boolean;role:boolean;rpc:boolean;server:boolean}>(`SELECT has_table_privilege('authenticated','public.validation_runs','SELECT') AS raw, has_table_privilege('authenticated','public.orders','UPDATE') AS update, has_column_privilege('authenticated','public.profiles','role','UPDATE') AS role, has_function_privilege('authenticated','public.create_validation_run(uuid,uuid,text,jsonb)','EXECUTE') AS rpc, has_table_privilege('service_role','public.validation_runs','INSERT') AS server`);
       expect(access.rows[0]).toEqual({raw:false,update:false,role:false,rpc:false,server:true});
       await db.exec(`INSERT INTO auth.users(id) VALUES('11111111-1111-4111-8111-111111111111');`);
-      const id="22222222-2222-4222-8222-222222222222";const owner="11111111-1111-4111-8111-111111111111";const document={id,ownerId:owner,entitlement:"preview"};
+      const id="22222222-2222-4222-8222-222222222222";const owner="11111111-1111-4111-8111-111111111111";const document={id,ownerId:owner,entitlement:"preview",updatedAt:"2026-10-28T00:00:00.000Z"};
       await db.query("SELECT public.create_validation_run($1,$2,$3,$4)",[id,owner,"unique-request",document]);
       await db.query("SELECT public.create_validation_run($1,$2,$3,$4)",[id,owner,"unique-request",document]);
       expect((await db.query<{n:number}>("SELECT count(*)::int AS n FROM public.validation_runs")).rows[0].n).toBe(1);
+      await db.exec("SET ROLE service_role");
+      const revised={...document,updatedAt:"2026-10-28T00:00:00.001Z",scenarios:[{name:"Saved scenario"}]};
+      const updateSql="UPDATE public.validation_runs SET document=$1 WHERE id=$2 AND owner_id=$3 AND document->>'updatedAt'=$4 RETURNING id";
+      expect((await db.query(updateSql,[revised,id,owner,document.updatedAt])).rows).toHaveLength(1);
+      expect((await db.query(updateSql,[document,id,owner,document.updatedAt])).rows).toHaveLength(0);
+      expect((await db.query(updateSql,[document,id,"33333333-3333-4333-8333-333333333333",revised.updatedAt])).rows).toHaveLength(0);
+      await db.exec("RESET ROLE");
       await db.exec("SET ROLE authenticated");
       await expect(db.query("SELECT document FROM public.validation_runs")).rejects.toThrow();
       await db.exec("RESET ROLE");

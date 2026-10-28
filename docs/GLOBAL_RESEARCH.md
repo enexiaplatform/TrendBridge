@@ -57,6 +57,14 @@ The next commerce milestone requires amount/currency verification against the au
 - HTTP suite verifies persistence, idempotency, owner isolation, locked exports, local fixture unlock, XLSX output and malformed/cross-origin requests.
 - `supabase test db` exercises the included database privilege tests when Docker and a local Supabase instance are available. Database/live account tests must not be reported as passed unless actually executed.
 
+## Saved financial scenarios (2026-10-28)
+
+Each private report can retain five user-defined financial scenarios, including a rationale. Currency, market and product scope remain fixed to the original report; price, purchase cost, shipping, acquisition cost, fee and FX may vary. Empty inputs remain unknown. Comparison charts and tables use deterministic calculations only, with negative contribution visible. This tool is available in the free preview; full report exports remain entitlement-gated. Public samples support draft calculation but cannot save.
+
+Scenarios are stored inside the existing owner-scoped validation run document. No new table or migration is needed. Saves and removals use atomic compare-and-swap against the document's `updatedAt` in both SQLite and Supabase; stale writes return 409 instead of erasing another change or entitlement. Unlock uses the same concurrency check. Existing documents without scenarios read as an empty list.
+
+Unlocked HTML/PDF and Excel exports include saved scenarios, their inputs and rationale. Excel adds editable formulas with the same cached calculation results shown in the app. Unsaved drafts and the separate price sandbox are excluded. Live Supabase/PostgREST acceptance remains pending; local storage, domain, export and HTTP checks do not establish production acceptance.
+
 ## Remaining commercial launch work
 
 Live Manus orchestration and evidence verification, measured pricing, a global merchant/payment integration, complete translation of all report narrative templates, validated market-specific regulatory/fee references, production analytics and live authenticated/Supabase acceptance. The public sample is a test template, not a production research result.

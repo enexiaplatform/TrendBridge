@@ -1,3 +1,25 @@
+.scenario-workspace { margin-top:24px; }
+.scenario-layout { display:grid; grid-template-columns:minmax(270px, .8fr) minmax(0, 1.4fr); gap:32px; }
+.scenario-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.scenario-editor .field { margin-bottom:12px; }
+.scenario-draft { display:flex; justify-content:space-between; gap:16px; padding:14px; background:#eef8fa; border-radius:10px; color:#002b67; }
+.scenario-draft strong { font-size:21px; }
+.scenario-status { color:#007b72; font-size:13px; }
+.scenario-comparison { min-width:0; border-left:1px solid #e3eaf2; padding-left:28px; }
+.scenario-chart { display:grid; gap:18px; margin:24px 0; }
+.scenario-chart-row { display:grid; grid-template-columns:minmax(80px,1fr) minmax(80px,1.5fr) minmax(70px,auto); align-items:center; gap:12px; font-size:12px; }
+.scenario-chart-row span { overflow-wrap:anywhere; }
+.scenario-chart-row strong { text-align:right; font-variant-numeric:tabular-nums; }
+.scenario-track { height:22px; position:relative; background:#f2f6fa; border-radius:5px; overflow:hidden; }
+.scenario-track:after { content:""; position:absolute; top:0; bottom:0; left:50%; width:1px; background:#8194aa; }
+.scenario-track i { position:absolute; height:100%; background:linear-gradient(90deg,#005bc9,#00abaa); }
+.scenario-track i.negative { background:#c26051; }
+.scenario-table-wrap { overflow-x:auto; }
+.scenario-table-wrap table { min-width:580px; }
+.scenario-table-wrap caption { text-align:left; padding:12px 0; font-size:12px; color:#61708a; }
+.scenario-table-wrap small { display:block; max-width:220px; overflow-wrap:anywhere; margin-top:4px; }
+@media(max-width:1100px) { .scenario-layout { grid-template-columns:1fr; gap:24px; }.scenario-comparison { border-left:0; border-top:1px solid #e3eaf2; padding:20px 0 0; } }
+@media(max-width:480px) { .scenario-fields { grid-template-columns:1fr; }.scenario-workspace .panel-title { flex-direction:column; align-items:flex-start; }.scenario-chart-row { gap:6px; grid-template-columns:80px minmax(60px,1fr) 75px; } }
 :root {
   color-scheme: light;
   --tb-brand-midnight: #031b42;
