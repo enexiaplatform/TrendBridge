@@ -1,3 +1,3 @@
-import { createHmac, timingSafeEqual } from "node:crypto";import { NextResponse } from "next/server";
-function safeEqual(a:string,b:string){const aa=Buffer.from(a);const bb=Buffer.from(b);return aa.length===bb.length&&timingSafeEqual(aa,bb)}
-export async function POST(request:Request){const secret=process.env.PAYOS_CHECKSUM_KEY;if(!secret)return NextResponse.json({error:"Payment provider not configured"},{status:503});const raw=await request.text();const signature=request.headers.get("x-signature")??"";const expected=createHmac("sha256",secret).update(raw).digest("hex");if(!safeEqual(signature,expected))return NextResponse.json({error:"Invalid signature"},{status:401});return NextResponse.json({received:true,note:"Signature boundary verified. Provider-specific order lookup and transactional fulfillment must be enabled after merchant onboarding."},{status:202})}
+// Payment is deliberately closed until a real global provider, merchant account,
+// verified event lookup, amount/currency matching and atomic fulfillment are integrated.
+export async function POST(){return Response.json({error:"Payment fulfillment is not activated. No payment or credit will be applied."},{status:503});}

@@ -1,52 +1,59 @@
-# TrendBridge AI
+# TrendBridge
 
-Production-oriented MVP foundation for an evidence-backed product intelligence and launch platform.
+Global product validation: product input → free snapshot → gated full report → validation tools.
 
-## What works locally
+## Current implementation
 
-- Vietnamese-first public website and pricing
-- Supabase email/password auth adapter (active when configured)
-- Five-step product research wizard
-- Persisted project and job creation when authenticated against Supabase
-- Deterministic financial engine with the canonical fixture tests
-- Interactive report with sensitivity analysis and editable assumptions
-- Honest unavailable states for competitor, supplier and market-signal providers
-- Client-generated summary PDF for the development report
-- Configurable plan/credit/payment data model with an idempotent credit ledger function
-- Owner-scoped RLS policies and a pgTAP schema/security smoke test
-- Admin provider readiness view
-- Commercial design system with reusable UI primitives and a live `/design-system` catalogue
+- English-default core journey, persisted EN/VI interface preference and independent report-language selection.
+- Market/channel/currency scope for US, Vietnam, UK, Germany and Australia. Scope support does not imply live market-data coverage.
+- Persistent product-specific snapshots and research history. No timed processing simulation or fixed report redirect.
+- Deterministic per-unit economics, explicit unknowns, user-supplied FX and an interactive price sandbox.
+- Versioned research schemas for sources, claims, comparable listings, supplier references, risks and validation experiments.
+- Server-side owner and entitlement checks; locked report data is omitted from the response, not hidden in the UI.
+- Clearly labeled development-only fixture unlock. No Manus calls, charge or credit consumption occurs.
+- UTF-8 print view (browser Save as PDF), editable XLSX workbook and English/Chinese RFQ drafts, all from the saved report.
+- Dormant Manus API v2 adapter with private tasks, structured output schema and bounded request timeout.
+- An additive Supabase migration restricts raw reports and privileged writes to the server.
+- Official owner-supplied logo and a commercial design system at `/design-system`.
 
-## Run
+## Run locally
 
-```bash
-npm install
-copy .env.example .env.local
+Use Node 22.22.2+ or a compatible newer version.
+
+```sh
+npm ci
 npm run dev
 ```
 
-The UI is useful without credentials in clearly labeled development mode. To activate persistence and real accounts, configure the Supabase public URL and publishable key, then apply the migration.
+Without Supabase configuration, local development uses `.data/research.sqlite` and an HttpOnly browser workspace cookie. Reports survive server restarts. Clearing the cookie loses access to that local workspace. This local store and fixture unlock are disabled in production.
 
-## Supabase
+Copy `.env.example` to `.env.local` when configuring Supabase. Never commit credentials.
 
-The migration under `supabase/migrations` creates normalized product research, evidence, sourcing, financial and commerce domains. Every user-data table has RLS enabled, explicit grants and owner policies. New Supabase projects no longer expose public tables automatically, so the migration grants only the operations needed by each role.
+## Checks
 
-```bash
-npx supabase start
-npx supabase db reset
-npx supabase test db
+```sh
+npm run check
 ```
 
-No production database is changed by this repository until you explicitly link a project and push the migration.
+Includes financial/schema/evidence/storage/export tests, embedded Postgres migration/privilege tests and the production build. Embedded Postgres tests use PGlite with an Auth schema stub; they are not evidence of a live Supabase Auth or production RLS acceptance run.
 
-## Design system
+With the local dev server running, run HTTP integration tests:
 
-The visual and interaction system is documented in [`docs/DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md). Its live catalogue runs at `/design-system`. Reusable primitives live under `components/ui`, while typed tokens live in `lib/design-system.ts`.
+```sh
+TB_HTTP_ORIGIN=http://localhost:3000 npx vitest run tests/http.test.ts
+```
 
-## External providers
+PowerShell equivalent: set `$env:TB_HTTP_ORIGIN='http://localhost:3000'` before invoking Vitest. GitHub CI runs both the normal quality gate and the HTTP integration suite.
 
-Search, AI and payment providers default to `disabled`. The application never substitutes fixtures for real provider results. Add a provider behind the adapter boundary and keep retrieved content untrusted. Payment fulfillment must verify the provider webhook, lookup the authoritative order and amount server-side, and call the private credit-ledger function with a stable idempotency key.
+## Production prerequisites
 
-## Readiness boundary
+Set the Supabase URL, publishable key and server-only secret key. Inspect the target database and migration ledger before applying the migrations. Enable Supabase anonymous sign-ins only with appropriate abuse controls if allowing free snapshots without registration; otherwise customers sign in first. Configure hosting-level rate limits. Missing production storage returns 503 instead of an ephemeral success.
 
-This is a functional MVP codebase, not a production launch receipt. Merchant onboarding, licensed research API contracts, worker deployment, transactional email, legal review, Supabase project configuration and live end-to-end verification remain external prerequisites.
+Manus live research, its durable worker/event reconciliation, independent evidence validation and a verified global payment provider remain disabled pending a live pilot. Full reports are not currently on sale. No external source research, paid fulfillment, live account isolation or production deployment is claimed operational by this repository.
+
+## Documentation
+
+- [Global research contracts and readiness boundaries](docs/GLOBAL_RESEARCH.md)
+- [Brand and design system](docs/DESIGN_SYSTEM.md)
+- [Manus task API](https://open.manus.im/docs/v2/task.create)
+- [Manus lifecycle](https://open.manus.im/docs/v2/task-lifecycle)

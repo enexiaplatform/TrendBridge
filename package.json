@@ -1,6 +1,14 @@
 {
   "name": "trendbridge-ai",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=22.22.2"
+  },
+  "overrides": {
+    "exceljs": {
+      "uuid": "11.1.1"
+    }
+  },
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -14,6 +22,7 @@
   "dependencies": {
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
+    "exceljs": "4.4.0",
     "jspdf": "latest",
     "lucide-react": "latest",
     "next": "latest",
@@ -23,6 +32,7 @@
     "zod": "latest"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.13",
     "@testing-library/jest-dom": "latest",
     "@testing-library/react": "latest",
     "@types/node": "latest",

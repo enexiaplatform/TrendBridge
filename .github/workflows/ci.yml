@@ -29,3 +29,11 @@ jobs:
         run: npm ci
       - name: Run quality gate
         run: npm run check
+      - name: Verify research journey over HTTP
+        run: |
+          npm run dev -- --port 3101 > /tmp/trendbridge-dev.log 2>&1 &
+          for attempt in $(seq 1 40); do
+            if curl -fsS http://localhost:3101/ > /dev/null; then break; fi
+            sleep 1
+          done
+          TB_HTTP_ORIGIN=http://localhost:3101 npx vitest run tests/http.test.ts

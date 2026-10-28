@@ -7,5 +7,6 @@ coverage
 playwright-report
 test-results
 .artifacts
+.data
 supabase/.temp
 *.tsbuildinfo
