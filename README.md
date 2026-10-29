@@ -7,7 +7,12 @@ Global product validation: product input → free snapshot → gated full report
 - English-default core journey, persisted EN/VI interface preference and independent report-language selection.
 - Market/channel/currency scope for US, Vietnam, UK, Germany and Australia. Scope support does not imply live market-data coverage.
 - Persistent product-specific snapshots and research history. No timed processing simulation or fixed report redirect.
-- Deterministic per-unit economics, explicit unknowns, user-supplied FX and an interactive price sandbox.
+- Deterministic per-unit economics, explicit unknowns, user-supplied FX and saved financial scenarios.
+- Opportunity shortlist with four-case comparison, stage/project filters and recoverable case archiving.
+- Private user-supplied research collection, comparable price grid, supplier quote terms and source-freshness checks.
+- Twelve-month launch cash/inventory planning, funding gaps, named scenarios and a signed cash chart.
+- Ten-section business plan with scope-based starter drafts, linked evidence, stale review detection and bounded plan history.
+- Validation tracker and append-only decisions with pinned source snapshots; independent owner-checked planning exports.
 - Versioned research schemas for sources, claims, comparable listings, supplier references, risks and validation experiments.
 - Server-side owner and entitlement checks; locked report data is omitted from the response, not hidden in the UI.
 - Clearly labeled development-only fixture unlock. No Manus calls, charge or credit consumption occurs.
@@ -40,7 +45,7 @@ Includes financial/schema/evidence/storage/export tests, embedded Postgres migra
 With the local dev server running, run HTTP integration tests:
 
 ```sh
-TB_HTTP_ORIGIN=http://localhost:3000 npx vitest run tests/http.test.ts
+TB_HTTP_ORIGIN=http://localhost:3000 npx vitest run tests/http.test.ts tests/launch-http.test.ts --maxWorkers=1
 ```
 
 PowerShell equivalent: set `$env:TB_HTTP_ORIGIN='http://localhost:3000'` before invoking Vitest. GitHub CI runs both the normal quality gate and the HTTP integration suite.
@@ -49,11 +54,13 @@ PowerShell equivalent: set `$env:TB_HTTP_ORIGIN='http://localhost:3000'` before 
 
 Set the Supabase URL, publishable key and server-only secret key. Inspect the target database and migration ledger before applying the migrations. Enable Supabase anonymous sign-ins only with appropriate abuse controls if allowing free snapshots without registration; otherwise customers sign in first. Configure hosting-level rate limits. Missing production storage returns 503 instead of an ephemeral success.
 
-Manus live research, its durable worker/event reconciliation, independent evidence validation and a verified global payment provider remain disabled pending a live pilot. Full reports are not currently on sale. No external source research, paid fulfillment, live account isolation or production deployment is claimed operational by this repository.
+Manus live research, its durable worker/event reconciliation, independent evidence validation and a verified global payment provider remain disabled pending a live pilot. Full reports are not currently on sale. The public UI/sample is deployed; private production persistence requires Supabase configuration and live account-isolation acceptance. A successful hosting deployment alone does not establish those capabilities. The research collection contains user-supplied references, not market-wide data.
 
 ## Documentation
 
 - [Global research contracts and readiness boundaries](docs/GLOBAL_RESEARCH.md)
 - [Brand and design system](docs/DESIGN_SYSTEM.md)
+- [Feature blueprint and reference research](docs/PRODUCT_BLUEPRINT_V2.md)
+- [Implemented checkpoints, limits and operator guide](docs/IMPLEMENTATION_V2.md)
 - [Manus task API](https://open.manus.im/docs/v2/task.create)
 - [Manus lifecycle](https://open.manus.im/docs/v2/task-lifecycle)
