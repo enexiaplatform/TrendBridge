@@ -1,6 +1,6 @@
 # TrendBridge — nghiên cứu sản phẩm và kế hoạch nâng cấp
 
-Ngày: 29/10/2026 · Trạng thái: đề xuất thực hiện, chưa triển khai redesign.
+Ngày: 29/10/2026 · Trạng thái: bản nghiên cứu ban đầu. Hướng thiết kế 2 và các cải tiến shell/intake/library/economics đã triển khai tại `8fb1bd9`; các hạng mục nghiên cứu thật và thương mại chưa hoàn tất. Đặc tả mở rộng về Metric, Apollo và business planning: [PRODUCT_BLUEPRINT_V2.md](PRODUCT_BLUEPRINT_V2.md).
 
 ## 1. Kết luận và phạm vi bằng chứng
 

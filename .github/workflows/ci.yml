@@ -36,4 +36,4 @@ jobs:
             if curl -fsS http://localhost:3101/ > /dev/null; then break; fi
             sleep 1
           done
-          TB_HTTP_ORIGIN=http://localhost:3101 npx vitest run tests/http.test.ts
+          TB_HTTP_ORIGIN=http://localhost:3101 npx vitest run tests/http.test.ts tests/launch-http.test.ts --maxWorkers=1

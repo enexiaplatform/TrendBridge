@@ -2,6 +2,7 @@ import { calculateFinancials } from "@/lib/financial";
 import type { ResearchInput, ResearchOutput } from "./contract";
 import { moduleDefinitions } from "./contract";
 import type { Scenario } from "./scenarios";
+import type { SavedWorkspace } from "@/lib/launch/model";
 
 export function buildSnapshot(input: ResearchInput) {
   const unknowns: string[] = [];
@@ -34,10 +35,11 @@ export type Run = {
   entitlement: "preview" | "fixture" | "paid";
   report: ResearchOutput | null;
   scenarios?: Scenario[];
+  workspace?: SavedWorkspace;
 };
 export function publicRun(run: Run) {
   const unlocked = run.entitlement === "paid" || run.entitlement === "fixture";
-  return { id: run.id, createdAt: run.createdAt, updatedAt: run.updatedAt, status: run.status, input: run.input, snapshot: run.snapshot, provider: run.provider, access: run.entitlement, report: unlocked ? run.report : null, scenarios: run.scenarios ?? [] };
+  return { id: run.id, createdAt: run.createdAt, updatedAt: run.updatedAt, status: run.status, input: run.input, snapshot: run.snapshot, provider: run.provider, access: run.entitlement, report: unlocked ? run.report : null, scenarios: run.scenarios ?? [], workspace:run.workspace };
 }
 export type PublicRun = ReturnType<typeof publicRun>;
 export function buildFixture(input: ResearchInput): ResearchOutput {

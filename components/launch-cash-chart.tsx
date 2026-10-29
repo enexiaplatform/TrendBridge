@@ -1,0 +1,6 @@
+"use client";
+import {Line,LineChart,CartesianGrid,ReferenceLine,ResponsiveContainer,Tooltip,XAxis,YAxis} from "recharts";
+import {money} from "@/lib/global";
+export default function LaunchCashChart({rows,currency,locale}:{rows:{month:number;closing:number}[];currency:string;locale:string}){
+  return <div style={{width:"100%",height:300,minWidth:0}} aria-hidden="true"><ResponsiveContainer width="100%" height={300} minWidth={1} initialDimension={{width:700,height:300}}><LineChart accessibilityLayer={false} data={rows} margin={{top:20,right:20,left:20,bottom:15}}><CartesianGrid vertical={false} stroke="#e1e9f2"/><XAxis dataKey="month" tickLine={false} axisLine={false}/><YAxis tickLine={false} axisLine={false} width={75} domain={[(min:number)=>Math.min(0,min),(max:number)=>Math.max(0,max)]} tickFormatter={v=>new Intl.NumberFormat(locale,{notation:"compact",maximumFractionDigits:1}).format(v)}/><ReferenceLine y={0} stroke="#a63b31"/><Tooltip labelFormatter={v=>`${locale==="vi-VN"?"Tháng":"Month"} ${v}`} formatter={v=>[money(Number(v),currency,locale),locale==="vi-VN"?"Tiền cuối kỳ":"Closing cash"]}/><Line type="linear" dataKey="closing" stroke="#009eaa" strokeWidth={3} dot={{r:3}} isAnimationActive={false}/></LineChart></ResponsiveContainer></div>;
+}

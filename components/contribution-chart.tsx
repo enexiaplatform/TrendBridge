@@ -12,6 +12,6 @@ export default function ContributionChart({ rows, currency, locale }: { rows: { 
     <YAxis domain={[Math.min(-max * .45, min * 1.3), max * 1.3]} axisLine={false} tickLine={false} tick={{ fill: "#6d809b", fontSize: 12 }} width={70} tickFormatter={value => new Intl.NumberFormat(locale, { notation: "compact", maximumFractionDigits: 1 }).format(value)}/>
     <ReferenceLine y={0} stroke="#94a4b9"/>
     <Tooltip formatter={value => money(Number(value), currency, locale)} cursor={{ fill: "#f4f8fc" }}/>
-    <Bar dataKey="profit" name="Contribution" maxBarSize={126} radius={[2, 2, 0, 0]} label={{ position: "top", fill: "#002b67", fontSize: 12, formatter: (value: unknown) => money(Number(value), currency, locale) }}>{rows.map((row, index) => <Cell key={index} fill={row.profit < 0 ? "#bd5145" : "#00a5a7"}/>)}</Bar>
+    <Bar isAnimationActive={false} dataKey="profit" name="Contribution" maxBarSize={126} radius={[2, 2, 0, 0]} label={{ position: "top", fill: "#002b67", fontSize: 12, formatter: (value: unknown) => money(Number(value), currency, locale) }}>{rows.map((row, index) => <Cell key={index} fill={row.profit < 0 ? "#bd5145" : "#00a5a7"}/>)}</Bar>
   </BarChart></ResponsiveContainer></div>;
 }

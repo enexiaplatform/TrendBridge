@@ -1,2 +1,3 @@
-import { AppShell } from "@/components/app-shell";import { ResearchHistory } from "@/components/research-history";
-export default function Dashboard(){return <AppShell breadcrumb="Workspace"><ResearchHistory/></AppShell>;}
+import { AppShell } from "@/components/app-shell";
+import { OpportunityWorkspace } from "@/components/opportunity-workspace";
+export default function Dashboard(){return <AppShell breadcrumb="Opportunity workspace"><OpportunityWorkspace/></AppShell>;}

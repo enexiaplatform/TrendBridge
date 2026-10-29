@@ -125,6 +125,12 @@ Reference mapping: `DESIGN_DIRECTIONS_2026-10-29.md`. Visual acceptance and inte
 
 ## Governance
 
+### Launch workspace extension
+
+The selected Research Workbench now supports an opportunity shortlist, a private cross-case research collection and six contextual launch tools: opportunity, evidence, cash, business plan, validation and decisions. Keep these tools within the case; do not add six global navigation destinations. The main Workspace compares opportunities; Library retrieves research reports.
+
+Launch surfaces use the same white/navy/cobalt/teal system, 6px controls, open headings and independently scrolling tables. Cash charts use signed numerical values and a zero reference with the exact schedule available below. Empty, unsaved, incomplete, stale and infeasible states must remain distinct. A reviewed plan is a user acknowledgment, not a verified-market badge. Controls and workflow labels support English/Vietnamese; raw source excerpts and user-authored content retain their language.
+
 - New tokens require a documented semantic role; do not add one-off colors.
 - New components must demonstrate default, hover, focus, disabled, loading and error states when applicable.
 - Design changes are accepted only after desktop and mobile visual comparison.

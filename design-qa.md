@@ -60,3 +60,17 @@ Date: 2026-10-29. Scope: selected visual direction and core local journey, not p
 - [x] Mobile and bilingual states captured.
 - [x] Core create/save/reload/open/export journey verified locally.
 - [x] Design-system documentation and catalogue updated.
+
+## Launch workspace extension acceptance — 2026-10-29
+
+Final result remains **passed for the bounded local UI/planning scope**. This does not mark live research, commerce, collaboration or hosted private storage as accepted.
+
+The original direction-2 image above was compared again against the final production build at `/reports/sample`, Economics, Higher acquisition cost selected. DOM viewport was 1487 × 1058 CSS pixels; the capture API returned a 1472 × 1047 content image at `.artifacts/launch-v2/economics-production.png`. The 1487 × 1058 reference was cropped to the same 1472 × 1047 bounds without rescaling. Both were placed in `.artifacts/launch-v2/design-comparison.png` and inspected together; the native-resolution heading/table/chart crops were inspected together in `design-detail.png`. Earlier incorrectly sized or transient chart captures were rejected and replaced, not accepted as QA evidence.
+
+Typography, white/separator rhythm, navy/cobalt/teal roles, original logo quality and exact signed example values remain consistent with the selected direction. The fifth case tab, Launch workspace, is an intentional functional addition requested in the subsequent feature expansion. Adaptive axes, disabled public save and explicit user-assumption limitations remain intentional. Bar animation is now disabled so switching views shows the computed values without an intermediate growth frame.
+
+The new launch views extend the existing system; they have no separately selected image and are not claimed to be a pixel recreation of an unprovided mock. Additional evidence: `launch-desktop.png`, `cash-desktop-final.png`, `cash-mobile-vi.png`, `compare-desktop.png`, `collection-desktop.png`, `release-cash.png` in `.artifacts/launch-v2/`. The initial cash editor placed results after a long form (P2). Results, signed chart and scenario comparison were moved first; unit/month assumptions and the detailed schedule use disclosure. Post-fix desktop and 390px Vietnamese captures were opened and inspected. The page measured 375px scroll width at a 390px viewport; wide tables scroll within their own region. Selected navigation controls scroll into view when section/language changes.
+
+Core browser evidence includes create, save/reload, evidence entry, twelve-month assumptions, named scenario, reviewed/stale plan, missing-budget rejection, persisted decision and two-case comparison. The actual downloaded workbook was opened programmatically: revision 5, closing month-12 cash 2091.5, decision Revise and the pinned QA source matched the stored case. HTML export was rendered in the browser; a generated PDF file and every printed page have not been independently inspected. Browser warning/error logs were empty on the inspected production sample.
+
+Final validation: 38 domain/storage/export tests passed, 3 HTTP integration tests passed, production build/type checking passed. CI is extended to run the new launch HTTP suite. No actionable P0/P1/P2 UI findings remain in this tested scope. Remaining commercial/data/scale gates and bounded pilot limitations are recorded in `docs/IMPLEMENTATION_V2.md`.
