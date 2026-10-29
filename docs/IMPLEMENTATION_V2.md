@@ -77,3 +77,7 @@ Final local checkpoint: 38 domain/storage/export tests and 3 HTTP tests passed; 
 7. Return to Workspace, select two to four cases and compare. Use Library for existing research reports and Research collection for your cross-case observations.
 
 No configuration secret is needed for the local development flow. A deployed public sample supports draft exploration but deliberately cannot persist edits.
+
+## Production persistence follow-up — 2026-10-29
+
+Private production cases now use real Supabase Auth sessions and the isolated `trendbridge` schema. The live HTTP acceptance run covers creation/retry, save/reload/history, HTML/XLSX export, cross-owner denial, stale writes and paid-report locks. Shared-project compatibility, encrypted backup/restore rehearsal and scoped legacy permission changes are recorded in the [connection guide](SUPABASE_CONNECTION.md); project-specific sensitive evidence stays local. Guest ownership remains tied to browser cookies. Manus, paid fulfillment and scheduled monitoring remain outside this accepted checkpoint.

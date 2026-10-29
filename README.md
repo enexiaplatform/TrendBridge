@@ -54,7 +54,11 @@ PowerShell equivalent: set `$env:TB_HTTP_ORIGIN='http://localhost:3000'` before 
 
 Set the Supabase URL, publishable key and server-only secret key. Inspect the target database and migration ledger before applying the migrations. Enable Supabase anonymous sign-ins only with appropriate abuse controls if allowing free snapshots without registration; otherwise customers sign in first. Configure hosting-level rate limits. Missing production storage returns 503 instead of an ephemeral success.
 
-Manus live research, its durable worker/event reconciliation, independent evidence validation and a verified global payment provider remain disabled pending a live pilot. Full reports are not currently on sale. The public UI/sample is deployed; private production persistence requires Supabase configuration and live account-isolation acceptance. A successful hosting deployment alone does not establish those capabilities. The research collection contains user-supplied references, not market-wide data.
+Private production persistence was verified on 2026-10-29 with real Supabase Auth sessions: creation, retry idempotency, saved workspace reload, history, exports, cross-owner denial, stale-write rejection and paid report locks. The deployment uses the isolated `trendbridge` schema and server-only document access. Guest research belongs to the anonymous browser identity; clearing its Auth cookies loses access. Cross-device recovery and team accounts are not established by this checkpoint. See the [connection and acceptance guide](docs/SUPABASE_CONNECTION.md).
+
+An optional real-cloud regression suite accepts `TB_CLOUD_ORIGIN=https://your-deployment.example` and runs `npx vitest run tests/cloud-storage.test.ts --maxWorkers=1`. It creates two anonymous QA accounts/cases and is skipped during normal CI; use the emitted QA case IDs for scoped operator cleanup. Never supply a real user's cookies. Running this suite is an explicit mutation of the selected deployment.
+
+Manus live research, its durable worker/event reconciliation, independent evidence validation and a verified global payment provider remain disabled pending a live pilot. Full reports are not currently on sale. A successful hosting deployment alone does not establish those capabilities. The research collection contains user-supplied references, not market-wide data.
 
 ## Documentation
 
@@ -62,5 +66,6 @@ Manus live research, its durable worker/event reconciliation, independent eviden
 - [Brand and design system](docs/DESIGN_SYSTEM.md)
 - [Feature blueprint and reference research](docs/PRODUCT_BLUEPRINT_V2.md)
 - [Implemented checkpoints, limits and operator guide](docs/IMPLEMENTATION_V2.md)
+- [Supabase connection and production acceptance](docs/SUPABASE_CONNECTION.md)
 - [Manus task API](https://open.manus.im/docs/v2/task.create)
 - [Manus lifecycle](https://open.manus.im/docs/v2/task-lifecycle)
