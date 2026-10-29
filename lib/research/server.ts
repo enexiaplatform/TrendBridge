@@ -21,7 +21,9 @@ export async function researchContext(createGuest = false) {
   if (!user && createGuest) { const result = await client.auth.signInAnonymously(); if (result.error) throw new ResearchError(401, "Sign in to save your research. Guest access is not enabled on this deployment."); user = result.data.user; }
   if (!user) throw new ResearchError(401, "Please sign in to access your research.");
   const secret = process.env.SUPABASE_SECRET_KEY; if (!secret) throw new ResearchError(503, "Research storage is not configured.");
-  const admin = createAdmin(process.env.NEXT_PUBLIC_SUPABASE_URL!, secret, { auth: { persistSession: false, autoRefreshToken: false } }); const owner = user.id;
+  const schema = process.env.SUPABASE_RESEARCH_SCHEMA || "public";
+  if (schema !== "public" && schema !== "trendbridge") throw new ResearchError(503, "Research storage configuration is invalid.");
+  const admin = createAdmin(process.env.NEXT_PUBLIC_SUPABASE_URL!, secret, { auth: { persistSession: false, autoRefreshToken: false } }).schema(schema); const owner = user.id;
   return {
     owner, testUnlock: false,
     async get(id: string): Promise<Run | null> { const { data, error } = await admin.from("validation_runs").select("document").eq("owner_id",owner).eq("id",id).maybeSingle(); if(error) throw new ResearchError(503,"Research is temporarily unavailable."); return data?.document ?? null; },
