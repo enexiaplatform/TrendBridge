@@ -1,6 +1,6 @@
 # TrendBridge Design System
 
-Version 1.1 — October 2026
+Version 1.2 — October 2026
 
 ## Official logo source
 
@@ -42,8 +42,8 @@ Intelligent, precise, premium, modern and trustworthy. The visual system combine
 
 ## Typography
 
-- **Manrope**: display, page titles, panel titles and material numerical outputs.
-- **Inter**: navigation, controls, body copy, tables and dense metadata.
+- **Manrope**: public marketing display and legacy catalogue specimens.
+- **Inter**: Research Workbench headings, navigation, controls, body copy, tables and numerical outputs. Analytical headings use 700–750 weight; body and tabular data remain quieter.
 - Maximum body line length: 70 characters for long-form content.
 - Data values use tabular numerals where alignment matters.
 - Controls never inherit browser-default typography.
@@ -52,12 +52,13 @@ Intelligent, precise, premium, modern and trustworthy. The visual system combine
 
 The base spacing unit is 4px. Product spacing uses 4, 8, 12, 16, 20, 24, 32, 40, 48, 64 and 96px.
 
-- Controls: 10px radius
-- Panels: 14px radius
-- Feature surfaces: 18px radius
-- Desktop application rail: 224px
-- Compact tablet rail: 76px
-- Mobile navigation: fixed 64px bottom rail
+- Workbench controls: 6px radius; contextual menus: 8px
+- Workbench panels: open white regions with thin dividers
+- Marketing feature surfaces retain the larger original radii
+- Desktop navigation: horizontal header, 78px minimum height
+- Desktop economics grid: 2.35:1, inspector at least 300px
+- At 850px: stack the inspector below the analysis
+- At 540px: wrap primary navigation and scroll wide tables independently
 - Minimum interactive target: 42px
 
 Avoid nested cards. Use open layout, separators and typography before adding another border.
@@ -99,7 +100,19 @@ Write calmly and directly. State the decision, then the reason and next action.
 - Preferred: “Chưa đủ dữ liệu đã xác minh để kết luận nhu cầu.”
 - Avoid: “Sản phẩm hot, tiềm năng bùng nổ 93/100.”
 
-Vietnamese is the source language. English localization should preserve meaning and evidence qualifiers, not translate word-for-word.
+English is the global product default. Vietnamese localization preserves meaning and evidence qualifiers. UI language and requested report language are independent. Raw user-entered names and report narratives retain their original language.
+
+## Research Workbench patterns
+
+`app/workbench.css` scopes the selected direction to `.workbench-shell`; public marketing styles remain separate. Use navy `#002B67` for analytical headings, cobalt `#005BC9` for focus/selection, action blue `#0061DF`, teal `#009EAA` for the next-step action, white canvas and `#E1E9F2` separators. Contribution series use teal `#00A5A7` and negative rust `#BD5145`; exact signed values always accompany color.
+
+- Case navigation: Overview / Research / Economics / Next steps. Keep unsaved economics inputs while changing sections.
+- Intake: product, market and channel first; reference, configuration and financial assumptions disclosed progressively. Preserve a validated local draft until successful submission.
+- Economics: immutable original inputs, named saved scenarios, explicitly unsaved drafts, table plus chart and a next-action inspector. Unknown amounts never become zero.
+- Library: real saved records, query and access filters, retry and empty states. Never manufacture recent research, account identities or counts.
+- Evidence: observed source excerpts and limitations remain inspectable. An illustrative fixture never becomes verified evidence through styling.
+
+Reference mapping: `DESIGN_DIRECTIONS_2026-10-29.md`. Visual acceptance and intentional deviations: `../design-qa.md`.
 
 ## Accessibility
 

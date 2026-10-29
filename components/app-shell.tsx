@@ -1,46 +1,24 @@
 "use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, CreditCard, FileSearch, LayoutDashboard, PlusCircle, Settings, ShieldCheck } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { Brand } from "./brand";
 import { LanguageSwitch, useLocale } from "./locale";
 
-const links = [
-  { href: "/dashboard", label: "Workspace", vi: "Tổng quan", icon: LayoutDashboard },
-  { href: "/research/new", label: "New research", vi: "Nghiên cứu mới", icon: PlusCircle },
-  { href: "/reports", label: "My reports", vi: "Báo cáo", icon: FileSearch },
-  { href: "/billing", label: "Plans & billing", vi: "Thanh toán", icon: CreditCard },
-  { href: "/admin", label: "Operations", vi: "Vận hành", icon: ShieldCheck },
-  { href: "/settings", label: "Settings", vi: "Cài đặt", icon: Settings },
-];
-
 export function AppShell({ children, breadcrumb }: { children: React.ReactNode; breadcrumb: string }) {
   const path = usePathname();
-  const {t}=useLocale();
-  return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <Link href="/"><Brand inverse /></Link>
-        <nav className="side-nav" aria-label={t("Application navigation","Điều hướng ứng dụng")}>
-          {links.map(({ href, label, vi, icon: Icon }) => (
-            <Link className={`side-link ${path === href ? "active" : ""}`} href={href} key={href} aria-label={t(label,vi)}>
-              <Icon size={18} strokeWidth={1.8} /><span>{t(label,vi)}</span>
-            </Link>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <ShieldCheck size={20}/><p>{t("Evidence before intelligence.","Bằng chứng trước kết luận.")}</p>
-          <span>{t("Your assumptions, clearly separated from external findings.","Giả định của bạn được phân biệt với dữ liệu nghiên cứu.")}</span>
-        </div>
-      </aside>
-      <main className="app-main">
-        <header className="topbar">
-          <div className="breadcrumb">TrendBridge / {breadcrumb}</div>
-          <div className="user-menu"><LanguageSwitch/><BarChart3 size={16} color="#0aa9c9" /><div className="avatar">TB</div></div>
-        </header>
-        {children}
-      </main>
-    </div>
-  );
+  const { t } = useLocale();
+  return <div className="workbench-shell">
+    <a className="wb-skip" href="#workspace-content">{t("Skip to content", "Đến nội dung")}</a>
+    <header className="wb-header">
+      <Link href="/dashboard" aria-label="TrendBridge"><Brand/></Link>
+      <nav aria-label={t("Workspace navigation", "Điều hướng workspace")} className="wb-navigation">
+        <Link href="/dashboard" aria-current={path === "/dashboard" || path.startsWith("/reports/") || path.startsWith("/research/") ? "page" : undefined}>{t("Workspace", "Workspace")}</Link>
+        <Link href="/reports" aria-current={path === "/reports" ? "page" : undefined}>{t("Library", "Thư viện")}</Link>
+      </nav>
+      <form action="/reports" method="get" role="search" className="wb-search"><Search size={17}/><input name="q" aria-label={t("Search your research", "Tìm nghiên cứu của bạn")} placeholder={t("Search your products…", "Tìm sản phẩm của bạn…")} maxLength={160}/></form>
+      <div className="wb-header-tools"><LanguageSwitch/><details className="wb-account"><summary aria-label={t("Account menu", "Menu tài khoản")}><span>TB</span><ChevronDown size={14}/></summary><nav aria-label={t("Account", "Tài khoản")}><Link href="/research/new">{t("New research", "Nghiên cứu mới")}</Link><Link href="/settings">{t("Settings", "Cài đặt")}</Link><Link href="/billing">{t("Plans & billing", "Gói & thanh toán")}</Link><Link href="/login">{t("Sign in", "Đăng nhập")}</Link></nav></details></div>
+    </header>
+    <main id="workspace-content" tabIndex={-1} aria-label={breadcrumb}>{children}</main>
+  </div>;
 }

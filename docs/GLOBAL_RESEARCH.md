@@ -67,4 +67,6 @@ Unlocked HTML/PDF and Excel exports include saved scenarios, their inputs and ra
 
 ## Remaining commercial launch work
 
+The selected Research Workbench now integrates the financial model, persistent scenarios, report sections and validation actions in one case workspace. Intake supports validated local draft restoration and accepts unknown costs; library search uses owner-scoped saved records. No new external provider or paid entitlement is enabled by this interface upgrade. The previous separate price sandbox has been replaced by the unified scenario editor; unsaved drafts remain excluded from exports.
+
 Live Manus orchestration and evidence verification, measured pricing, a global merchant/payment integration, complete translation of all report narrative templates, validated market-specific regulatory/fee references, production analytics and live authenticated/Supabase acceptance. The public sample is a test template, not a production research result.

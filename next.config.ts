@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
-  experimental: { optimizePackageImports: ["lucide-react", "recharts"] },
+  experimental: { cpus: 2, optimizePackageImports: ["lucide-react", "recharts"] },
 };
 
 export default nextConfig;

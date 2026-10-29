@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
+import "./workbench.css";
 import { LocaleProvider } from "@/components/locale";
 
 const inter = Inter({ subsets: ["latin", "vietnamese"], variable: "--font-sans" });
