@@ -67,6 +67,10 @@ describe("Market Intelligence and GTM contracts",()=>{
     expect(draft).toContain("Daily commuters");expect(draft).toContain("unverified assumptions");
     const channels=planStarter(run,run.workspace!,"channels",false);expect(channels).toContain("modeled customers 9");expect(channels.length).toBeLessThanOrEqual(3000);
   });
+  it("keeps evidence-rich plan starters within the editor limit and states the omission",()=>{
+    const run=sampleRun();run.workspace!.evidence=Array.from({length:30},(_,i)=>({id:crypto.randomUUID(),kind:"competitor",title:`Reference ${i} `+"x".repeat(140),url:`https://example.com/${i}`,excerpt:"A user-entered reference for planning",observedOn:"2026-01-01",configuration:"500 ml",limitations:"Not verified",price:20,currency:"USD",packSize:1,match:"comparable"}));
+    const draft=planStarter(run,run.workspace!,"competition",false);expect(draft.length).toBeLessThanOrEqual(3000);expect(draft).toContain("Starter shortened");expect(run.workspace!.evidence).toHaveLength(30);
+  });
   it("exports saved assumptions and identical scenario math, escaping untrusted prose",async()=>{
     const run=sampleRun();run.workspace!.strategy!.positioning.promise='<script>alert("x")</script>';
     const html=launchHtml(run);expect(html).toContain("Market Intelligence &amp; GTM Strategy");expect(html).toContain("&lt;script&gt;");expect(html).not.toContain('<script>alert("x")</script>');expect(html).toContain("<svg");

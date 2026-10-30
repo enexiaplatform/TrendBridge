@@ -30,5 +30,8 @@ export function planStarter(run:Pick<PublicRun,"input">,w:Workspace,key:typeof b
     milestones:s.plays.slice(0,4).map(r=>`${vi?"Tuần":"Week"} ${r.startWeek}–${r.endWeek}: ${clip(r.title,80)} / ${clip(r.owner,60)}. ${clip(r.gate,160)}`).join("\n"),
   }:{};
   const strategyFacts=strategic[key];
-  return shared+"\n\n"+(vi?vn[key]:en[key])+(strategyFacts?`\n\n${vi?"CHIẾN LƯỢC NGƯỜI DÙNG GHI NHẬN — giả định chưa kiểm chứng":"USER-RECORDED STRATEGY — unverified assumptions"}\n${strategyFacts}`:"");
+  const draft=shared+"\n\n"+(vi?vn[key]:en[key])+(strategyFacts?`\n\n${vi?"CHIẾN LƯỢC NGƯỜI DÙNG GHI NHẬN — giả định chưa kiểm chứng":"USER-RECORDED STRATEGY — unverified assumptions"}\n${strategyFacts}`:"");
+  if(draft.length<=3000)return draft;
+  const prefix=draft.slice(0,2800),breakAt=prefix.lastIndexOf("\n");
+  return prefix.slice(0,breakAt>2400?breakAt:2800)+"\n\n"+(vi?"Nháp rút gọn để phù hợp trình biên tập. Xem toàn bộ nguồn và giả định trong workspace.":"Starter shortened to fit the editor. Inspect the full evidence and assumptions in the workspace.");
 }
