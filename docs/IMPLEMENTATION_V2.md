@@ -68,6 +68,8 @@ Final local checkpoint: 38 domain/storage/export tests and 3 HTTP tests passed; 
 
 ## How to use
 
+Market Intelligence and GTM are now first-class case sections. Build segments and comparable alternatives, record monthly signals with a consistent metric/unit, choose an ICP, draft positioning, model channel conversion/spend and schedule launch plays with owners/gates. Save once to retain all sections. Download the saved Market & GTM brief or the expanded workbook. See [the visualization and strategy contract](MARKET_INTELLIGENCE_GTM.md). Existing cases open with empty strategy inputs; only the explicitly illustrative public sample is seeded.
+
 1. Create a free case, then open **Launch workspace**.
 2. Set project label and stage; save.
 3. Add source records and quote terms; explicitly retain limitations.

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { currencies } from "@/lib/global";
+import { strategySchema, strategySources, type Strategy } from "@/lib/strategy/model";
 
 const text = z.string().trim().max(3000);
 const id = z.uuid();
@@ -39,20 +40,21 @@ export const workspaceSchema = z.object({
   evidence:z.array(evidenceSchema).max(30), experiments:z.array(experimentSchema).max(20), cash:cashInputSchema,
   cashScenarios:z.array(z.object({id,name:z.string().trim().min(2).max(80),cash:cashInputSchema}).strict()).max(3).default([]),
   sizing:z.object({customers:amount,annualSpend:amount,serviceableRate:z.number().min(0).max(1).nullable(),reachableCustomers:amount,sourceIds:z.array(id).max(30)}).strict().default({customers:null,annualSpend:null,serviceableRate:null,reachableCustomers:null,sourceIds:[]}),
-  blocks:z.array(planBlock).length(10),
+  blocks:z.array(planBlock).length(10), strategy:strategySchema.optional(),
 }).strict().superRefine((w,c)=>{
   if(new Set(w.blocks.map(b=>b.key)).size!==10)c.addIssue({code:"custom",message:"Plan sections must be unique."});
   for(const rows of [w.evidence,w.experiments]) if(new Set(rows.map(r=>r.id)).size!==rows.length)c.addIssue({code:"custom",message:"Duplicate record IDs."});
   const sources=new Set(w.evidence.map(e=>e.id));
   for(const row of [...w.experiments,...w.blocks])if(row.evidenceIds.some(e=>!sources.has(e)))c.addIssue({code:"custom",message:"A linked evidence record is missing."});
   if(w.sizing.sourceIds.some(id=>!sources.has(id)))c.addIssue({code:"custom",message:"Sizing source is missing."});
+  if(w.strategy&&strategySources(w.strategy).some(id=>!sources.has(id)))c.addIssue({code:"custom",message:"A strategy source is missing from the evidence collection."});
 });
 export type Workspace = z.infer<typeof workspaceSchema>;
 export type CashInput = z.infer<typeof cashInputSchema>;
 export type Evidence = z.infer<typeof evidenceSchema>;
 export type Experiment = z.infer<typeof experimentSchema>;
 export type Decision = {id:string;at:string;choice:"continue"|"revise"|"stop";rationale:string;evidenceIds:string[];evidenceSnapshot:Evidence[]};
-export type PlanVersion = {revision:number;at:string;blocks:Workspace["blocks"];cash:CashInput;sizing:Workspace["sizing"]};
+export type PlanVersion = {revision:number;at:string;blocks:Workspace["blocks"];cash:CashInput;sizing:Workspace["sizing"];strategy?:Strategy};
 export type SavedWorkspace = Workspace & {revision:number;decisions:Decision[];planVersions:PlanVersion[]};
 export function emptyWorkspace(): SavedWorkspace {
   return {schemaVersion:"trendbridge.workspace/v1",project:"",stage:"exploring",archived:false,evidence:[],experiments:[],cashScenarios:[],sizing:{customers:null,annualSpend:null,serviceableRate:null,reachableCustomers:null,sourceIds:[]},revision:0,decisions:[],planVersions:[],
@@ -63,7 +65,7 @@ export const mutationSchema=z.object({expectedUpdatedAt:z.iso.datetime(),workspa
 
 // A stable dependency key, not a quality score. Exact inputs are retained for inspectable review invalidation.
 export function planBasis(w:Workspace) {
-  const raw=JSON.stringify({cash:w.cash,sizing:w.sizing,evidence:w.evidence,experiments:w.experiments},(_key,value)=>value&&typeof value==="object"&&!Array.isArray(value)?Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b))):value);
+  const raw=JSON.stringify({cash:w.cash,sizing:w.sizing,evidence:w.evidence,experiments:w.experiments,...w.strategy?{strategy:w.strategy}:{}},(_key,value)=>value&&typeof value==="object"&&!Array.isArray(value)?Object.fromEntries(Object.entries(value).sort(([a],[b])=>a.localeCompare(b))):value);
   let a=2166136261,b=5381;for(let i=0;i<raw.length;i++){a=Math.imul(a^raw.charCodeAt(i),16777619);b=Math.imul(b,33)^raw.charCodeAt(i);}
   return `${(a>>>0).toString(16)}-${(b>>>0).toString(16)}`;
 }
@@ -83,7 +85,7 @@ export function applyWorkspace(previous:SavedWorkspace|undefined,raw:unknown,at:
     decisions.push({...decision,id:crypto.randomUUID(),at,evidenceSnapshot:structuredClone(w.evidence.filter(e=>decision.evidenceIds.includes(e.id)))});
   }
   const revision=(previous?.revision??0)+1,planVersions=[...(previous?.planVersions??[])];
-  if(w.blocks.some(b=>b.content.trim())&&(!previous||planBasis(previous)!==basis||JSON.stringify(previous.blocks)!==JSON.stringify(blocks)))planVersions.push({revision,at,blocks:structuredClone(blocks),cash:structuredClone(w.cash),sizing:structuredClone(w.sizing)});
+  if(w.blocks.some(b=>b.content.trim())&&(!previous||planBasis(previous)!==basis||JSON.stringify(previous.blocks)!==JSON.stringify(blocks)))planVersions.push({revision,at,blocks:structuredClone(blocks),cash:structuredClone(w.cash),sizing:structuredClone(w.sizing),...w.strategy?{strategy:structuredClone(w.strategy)}:{}});
   return {...w,blocks,revision,decisions,planVersions:planVersions.slice(-10)};
 }
 

@@ -1,6 +1,6 @@
 # TrendBridge
 
-Global product validation: product input → free snapshot → gated full report → validation tools.
+Global market intelligence and GTM planning: product scope → customer and competitive thesis → channel economics → launch decisions. Research inputs and planning assumptions remain distinct from verified market findings.
 
 ## Current implementation
 
@@ -8,6 +8,8 @@ Global product validation: product input → free snapshot → gated full report
 - Market/channel/currency scope for US, Vietnam, UK, Germany and Australia. Scope support does not imply live market-data coverage.
 - Persistent product-specific snapshots and research history. No timed processing simulation or fixed report redirect.
 - Deterministic per-unit economics, explicit unknowns, user-supplied FX and saved financial scenarios.
+- First-class Market Intelligence and GTM Strategy sections: selectable segment/competitive maps, monthly signals with gaps, positioning, channel conversion sensitivity, contribution comparison and a thirteen-week rollout.
+- A private, saved Market & GTM brief with vector charts, source appendix and dedicated workbook sheets; strategic inputs feed deterministic plan starters and invalidate stale reviews.
 - Opportunity shortlist with four-case comparison, stage/project filters and recoverable case archiving.
 - Private user-supplied research collection, comparable price grid, supplier quote terms and source-freshness checks.
 - Twelve-month launch cash/inventory planning, funding gaps, named scenarios and a signed cash chart.
@@ -67,5 +69,6 @@ Manus live research, its durable worker/event reconciliation, independent eviden
 - [Feature blueprint and reference research](docs/PRODUCT_BLUEPRINT_V2.md)
 - [Implemented checkpoints, limits and operator guide](docs/IMPLEMENTATION_V2.md)
 - [Supabase connection and production acceptance](docs/SUPABASE_CONNECTION.md)
+- [Market Intelligence, GTM and visualization contracts](docs/MARKET_INTELLIGENCE_GTM.md)
 - [Manus task API](https://open.manus.im/docs/v2/task.create)
 - [Manus lifecycle](https://open.manus.im/docs/v2/task-lifecycle)

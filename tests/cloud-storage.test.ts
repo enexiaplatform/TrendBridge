@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { emptyWorkspace } from "@/lib/launch/model";
 import { sampleRun } from "@/lib/research/sample";
+import { illustrativeStrategy } from "@/lib/strategy/sample";
 
 // Explicit opt-in: creates two anonymous QA accounts/cases on the given HTTPS deployment.
 // Never reuse a real user's cookies. Supabase SSR may issue multiple/chunked cookies.
@@ -43,6 +44,7 @@ describe.skipIf(!origin)("cloud research storage with real Auth sessions", () =>
     expect((await second(path)).status).toBe(404);
     const { revision: _r, decisions: _d, planVersions: _p, ...workspace } = emptyWorkspace();
     workspace.project = "Cloud persistence QA"; workspace.stage = "validating";
+    workspace.strategy = illustrativeStrategy();
     workspace.blocks[0].content = "QA only: validate persistence before activating external research.";
     const body = { expectedUpdatedAt: run.updatedAt, workspace };
     const put = (send: ReturnType<typeof session>, value = body) => send(`${path}/workspace`, {
@@ -51,6 +53,7 @@ describe.skipIf(!origin)("cloud research storage with real Auth sessions", () =>
     expect((await put(second)).status).toBe(404);
     const saved = await put(first); expect(saved.status).toBe(200); run = await saved.json();
     expect(run.workspace.revision).toBe(1); expect(run.access).toBe("preview"); expect(run.report).toBeNull();
+    expect(run.workspace.strategy.channels).toHaveLength(2);
     expect((await put(first)).status).toBe(409);
     const reload = await first(path); expect(reload.status).toBe(200);
     expect((await reload.json()).workspace).toEqual(run.workspace);
@@ -58,6 +61,8 @@ describe.skipIf(!origin)("cloud research storage with real Auth sessions", () =>
     expect((await list.json()).opportunities).toEqual(expect.arrayContaining([expect.objectContaining({ id: run.id, project: "Cloud persistence QA" })]));
     const html = await first(`${path}/launch-export?format=html`); expect(html.status).toBe(200);
     expect(await html.text()).toContain("QA only: validate persistence");
+    const brief = await first(`${path}/launch-export?format=strategy`); expect(brief.status).toBe(200);
+    expect(await brief.text()).toContain("Market Intelligence &amp; GTM Brief");
     const xlsx = await first(`${path}/launch-export?format=xlsx`); expect(xlsx.status).toBe(200);
     expect([...new Uint8Array(await xlsx.arrayBuffer()).slice(0, 2)]).toEqual([80, 75]);
     expect((await second(`${path}/launch-export?format=html`)).status).toBe(404);

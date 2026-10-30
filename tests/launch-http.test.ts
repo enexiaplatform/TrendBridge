@@ -1,6 +1,7 @@
 import {describe,it,expect} from "vitest";
 import {emptyWorkspace,planBasis} from "@/lib/launch/model";
 import {sampleRun} from "@/lib/research/sample";
+import {illustrativeStrategy} from "@/lib/strategy/sample";
 const origin=process.env.TB_HTTP_ORIGIN;
 describe.skipIf(!origin)("launch workspace HTTP ownership and revisions",()=>{
   it("persists workflow, evidence, plans and immutable decisions without unlocking research",async()=>{
@@ -8,16 +9,20 @@ describe.skipIf(!origin)("launch workspace HTTP ownership and revisions",()=>{
     const first=await create();expect(first.status).toBe(201);const cookie=first.headers.get("set-cookie")!.split(";")[0];let run=await first.json();
     const other=await create(),otherCookie=other.headers.get("set-cookie")!.split(";")[0];
     const endpoint=`${origin}/api/research/${run.id}/workspace`,w=emptyWorkspace();w.project="Global launch pilot";w.stage="validating";
+    expect((await fetch(`${origin}/api/research/${run.id}/launch-export?format=strategy`,{headers:{Cookie:cookie}})).status).toBe(409);
     w.evidence=[{id:crypto.randomUUID(),kind:"competitor",title:"Comparable reference",url:"https://example.com/listing",excerpt:"A user-recorded configuration and price",configuration:"500ml steel mug",limitations:"User entered, not independently checked",observedOn:new Date().toISOString().slice(0,10),price:20,currency:"USD",packSize:1,match:"comparable"}];
+    w.strategy=illustrativeStrategy();w.strategy.channels[0].sourceIds=[w.evidence[0].id];
     w.blocks[0]={...w.blocks[0],content:"Run a bounded demand test before inventory purchase.",reviewedAt:new Date().toISOString(),basis:planBasis(w)};
     const {revision:_,decisions:__,planVersions:___,...workspace}=w;
     const body={expectedUpdatedAt:run.updatedAt,workspace,decision:{choice:"revise",rationale:"Need customer evidence before spending",evidenceIds:[w.evidence[0].id]}};
     const put=(b:unknown,c=cookie,o=origin!)=>fetch(endpoint,{method:"PUT",headers:{Cookie:c,Origin:o,"Content-Type":"application/json"},body:JSON.stringify(b)});
     expect((await put(body,otherCookie)).status).toBe(404);
     expect((await put({...body,workspace:{...workspace,entitlement:"paid"}})).status).toBe(400);
+    expect((await put({...body,workspace:{...workspace,strategy:{...workspace.strategy,positioning:{...workspace.strategy!.positioning,segmentId:crypto.randomUUID()}}}})).status).toBe(400);
     expect((await put(body,cookie,"https://untrusted.invalid")).status).toBe(403);
     const saved=await put(body);expect(saved.status).toBe(200);run=await saved.json();
     expect(run.access).toBe("preview");expect(run.report).toBeNull();expect(run.workspace.revision).toBe(1);expect(run.workspace.decisions).toHaveLength(1);expect(run.workspace.decisions[0].evidenceSnapshot[0].title).toBe("Comparable reference");expect(run.workspace.planVersions).toHaveLength(1);
+    expect(run.workspace.strategy.channels[0].sourceIds).toEqual([w.evidence[0].id]);expect(run.workspace.planVersions[0].strategy.segments).toHaveLength(3);
     expect((await put(body)).status).toBe(409);
     const reload=await fetch(`${origin}/api/research/${run.id}`,{headers:{Cookie:cookie}});expect((await reload.json()).workspace).toEqual(run.workspace);
     const history=await fetch(`${origin}/api/opportunities`,{headers:{Cookie:cookie}});const opportunities=(await history.json()).opportunities;expect(opportunities).toHaveLength(1);expect(opportunities[0]).toMatchObject({project:"Global launch pilot",stage:"validating",evidenceCount:1});
@@ -28,6 +33,8 @@ describe.skipIf(!origin)("launch workspace HTTP ownership and revisions",()=>{
     expect(raced.map(r=>r.status).sort()).toEqual([200,409]);
     const denied=await fetch(`${origin}/api/research/${run.id}/launch-export?format=html`,{headers:{Cookie:otherCookie}});expect(denied.status).toBe(404);
     const html=await fetch(`${origin}/api/research/${run.id}/launch-export?format=html`,{headers:{Cookie:cookie}});expect(html.status).toBe(200);expect(await html.text()).toContain("Run a bounded demand test");
+    const brief=await fetch(`${origin}/api/research/${run.id}/launch-export?format=strategy`,{headers:{Cookie:cookie}});expect(brief.status).toBe(200);expect(await brief.text()).toContain("Comparable reference");
+    expect((await fetch(`${origin}/api/research/${run.id}/launch-export?format=strategy`,{headers:{Cookie:otherCookie}})).status).toBe(404);
     const xlsx=await fetch(`${origin}/api/research/${run.id}/launch-export?format=xlsx`,{headers:{Cookie:cookie}});expect(xlsx.status).toBe(200);expect(new Uint8Array(await xlsx.arrayBuffer()).slice(0,2)).toEqual(new Uint8Array([80,75]));
     const paidExport=await fetch(`${origin}/api/research/${run.id}/export?format=xlsx`,{headers:{Cookie:cookie}});expect(paidExport.status).toBe(403);
     const cap=await(await fetch(`${origin}/api/capabilities`)).json();expect(cap.research.live).toBe(false);expect(cap.commerce.paidUnlock).toBe(false);

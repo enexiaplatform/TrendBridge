@@ -125,6 +125,14 @@ Reference mapping: `DESIGN_DIRECTIONS_2026-10-29.md`. Visual acceptance and inte
 
 ## Governance
 
+### Market Intelligence and GTM extension — v1.3
+
+The case navigation now includes Overview / Market Intelligence / GTM Strategy / Research report / Economics / Next steps / Launch workspace. Market and GTM share the same persisted workspace, save controls and private export boundary. Case section is URL-backed; selections and sensitivity are ephemeral. Global navigation remains Workspace / Library.
+
+Use the analytical pattern inventory in `MARKET_INTELLIGENCE_GTM.md`: segment priority and competitor value maps with fixed-size points, a monthly line with explicit missingness, cohort bars, signed contribution bars, a schematic route to market and thirteen-week schedule. These are SVG/HTML in the existing logo navy/cobalt/teal system. Rust denotes a modeled loss; amber denotes assumptions. Color never supplies the only meaning. Do not use synthetic KPI counts as an intelligence claim.
+
+Chart geometry is recomputed at the container's actual width. Ratings use an explicit 1–5 scale; prices use the case currency and comparable per-unit basis. Mark selection is available via keyboard and labeled HTML buttons. Every chart has visible labels and a table/list equivalent. On mobile, collapse introductions/editors, reduce ticks, stack the inspector and keep page overflow inside data tables. SVG export preserves the same saved inputs and cautions.
+
 ### Launch workspace extension
 
 The selected Research Workbench now supports an opportunity shortlist, a private cross-case research collection and six contextual launch tools: opportunity, evidence, cash, business plan, validation and decisions. Keep these tools within the case; do not add six global navigation destinations. The main Workspace compares opportunities; Library retrieves research reports.
