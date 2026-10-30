@@ -11,7 +11,8 @@ import { launchLabel } from "./launch-labels";
 import { MarketSizingTool, SupplierQuoteTerms, CashScenarios, EvidenceQuality } from "./launch-tools";
 import { emptyStrategy, strategySources } from "@/lib/strategy/model";
 const LaunchCashChart=dynamic(()=>import("./launch-cash-chart"),{ssr:false});
-const StrategyWorkbench=dynamic(()=>import("./strategy-workbench"),{ssr:false});
+function StrategyLoading(){const {t}=useLocale();return <p className="si-empty" role="status">{t("Loading market and GTM tools…","Đang tải công cụ thị trường và GTM…")}</p>;}
+const StrategyWorkbench=dynamic(()=>import("./strategy-workbench"),{ssr:false,loading:StrategyLoading});
 
 const headings:Record<string,[string,string]>={summary:["Decision summary","Tóm tắt quyết định"],customer:["Customer & problem","Khách hàng & vấn đề"],market:["Market & opportunity","Thị trường & cơ hội"],competition:["Alternatives & competitors","Giải pháp thay thế & đối thủ"],positioning:["Offer & positioning","Đề xuất & định vị"],channels:["Channels & acquisition tests","Kênh bán & thử nghiệm"],operations:["Supply & operations","Nguồn cung & vận hành"],financials:["Launch budget & cash","Ngân sách & dòng tiền"],risks:["Risks & stop conditions","Rủi ro & điều kiện dừng"],milestones:["Milestones & decision gates","Cột mốc & quyết định"]};
 export function LaunchWorkbench({run,onSaved,activeMode="launch"}:{run:PublicRun;onSaved:(run:PublicRun)=>void;activeMode?:"intelligence"|"gtm"|"launch"}){
@@ -54,7 +55,7 @@ export function LaunchWorkbench({run,onSaved,activeMode="launch"}:{run:PublicRun
     const content={product:run.input,workspace:w,cashForecast:calc,draft:dirty,provider:"user-entered; external research disabled"};
     const url=URL.createObjectURL(new Blob([JSON.stringify(content,null,2)],{type:"application/json"}));const a=document.createElement("a");a.href=url;a.download=`trendbridge-launch-${run.id}${dirty?"-draft":""}.json`;a.click();URL.revokeObjectURL(url);
   }
-  return <section className={`lw-root ${activeMode!=="launch"?"si-shell":""}`} aria-label={t("Launch workspace","Workspace triển khai")}>
+  return <section className={`lw-root ${activeMode!=="launch"?"si-shell":""}`} aria-label={activeMode==="intelligence"?t("Market Intelligence","Thông tin thị trường"):activeMode==="gtm"?t("GTM Strategy","Chiến lược GTM"):t("Launch workspace","Workspace triển khai")}>
     <header className={`lw-heading ${activeMode!=="launch"?"si-workspace-header":""}`}><div><span className="wb-overline">{t("FROM RESEARCH TO EXECUTION","TỪ NGHIÊN CỨU ĐẾN THỰC THI")}</span><h2>{t("Build the case. Test the plan.","Xây cơ sở. Kiểm chứng kế hoạch.")}</h2><p>{t("Your evidence, cash assumptions and decisions stay together. No live AI research is running.","Bằng chứng, giả định vốn và quyết định trong cùng hồ sơ. Chưa chạy nghiên cứu AI trực tiếp.")}</p></div><div className="actions"><button className="btn btn-outline" onClick={exportDraft}><Download size={15}/>{t("Backup draft","Tải bản nháp")}</button><button className="btn btn-primary" disabled={busy||!dirty||run.id==="sample"} onClick={()=>save()}><Save size={15}/>{busy?t("Saving…","Đang lưu…"):t("Save workspace","Lưu workspace")}</button></div></header>
     <div className="lw-save-state" role="status">{message|| (dirty?t("Unsaved changes. Save before leaving this case.","Có thay đổi chưa lưu. Hãy lưu trước khi rời hồ sơ."):t("Saved revision","Phiên bản đã lưu")+` ${w.revision}`)}</div>
     {dirty&&<button className="btn btn-outline" onClick={()=>{setW(structuredClone(run.workspace??emptyWorkspace()));setDirty(false);setMessage(t("Working edits discarded; saved data is retained.","Đã bỏ chỉnh sửa đang làm; giữ dữ liệu đã lưu."));}}>{t("Discard working edits","Bỏ chỉnh sửa đang làm")}</button>}

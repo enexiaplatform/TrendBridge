@@ -10,7 +10,7 @@ import { useLocale } from "./locale";
 import { sampleReport } from "@/lib/research/sample";
 import { ReportModuleData } from "./report-module-data";
 import { FinancialScenarios } from "./financial-scenarios";
-function LaunchLoading(){const {t}=useLocale();return <p className="lw-root" role="status">{t("Loading launch tools…","Đang tải công cụ triển khai…")}</p>;}
+function LaunchLoading(){const {t}=useLocale();return <p className="lw-root" role="status">{t("Loading case tools…","Đang tải công cụ hồ sơ…")}</p>;}
 const LaunchWorkbench=dynamic(()=>import("./launch-workbench").then(m=>m.LaunchWorkbench),{ssr:false,loading:LaunchLoading});
 
 type Section = "overview" | "research" | "economics" | "next" | "launch" | "intelligence" | "gtm";
