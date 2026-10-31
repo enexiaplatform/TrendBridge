@@ -4,6 +4,7 @@ import "./globals.css";
 import "./workbench.css";
 import "./launch.css";
 import "./strategy.css";
+import "./precision.css";
 import { LocaleProvider } from "@/components/locale";
 
 const inter = Inter({ subsets: ["latin", "vietnamese"], variable: "--font-sans" });

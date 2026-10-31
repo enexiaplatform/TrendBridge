@@ -1,4 +1,11 @@
-import { ArrowRight, BarChart3, Download, Plus, ShieldCheck, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  BarChart3,
+  Download,
+  Plus,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
 import { Brand } from "@/components/brand";
 import { Button } from "@/components/ui/button";
 import { EvidenceBadge } from "@/components/ui/evidence-badge";
@@ -6,31 +13,467 @@ import { Surface } from "@/components/ui/surface";
 import { trendBridgeTokens } from "@/lib/design-system";
 
 const swatches = [
-  ["Logo Navy", "#002B67", "Màu chữ Trend, điều hướng và primary action"], ["Logo Cobalt", "#005BC9", "Đầu gradient của biểu tượng TB"],
-  ["Logo Cyan", "#00ADEF", "Điểm nối gradient, interactive accent"], ["Logo Teal", "#00ABAA", "Màu chữ Bridge và brand accent"],
-  ["Estimated Amber", "#CF7A10", "Ước tính, chờ xác minh"], ["Risk Red", "#DD4355", "Rủi ro và hành động phá hủy"],
-  ["Canvas", "#F5F8FB", "Nền workspace"], ["Ink", "#0B1830", "Nội dung chính"],
+  ["Logo Navy", "#002B67", "Màu chữ Trend, điều hướng và primary action"],
+  ["Logo Cobalt", "#005BC9", "Đầu gradient của biểu tượng TB"],
+  ["Logo Cyan", "#00ADEF", "Điểm nối gradient, interactive accent"],
+  ["Logo Teal", "#00ABAA", "Màu chữ Bridge và brand accent"],
+  ["Estimated Amber", "#CF7A10", "Ước tính, chờ xác minh"],
+  ["Risk Red", "#DD4355", "Rủi ro và hành động phá hủy"],
+  ["Canvas", "#F5F8FB", "Nền workspace"],
+  ["Ink", "#0B1830", "Nội dung chính"],
 ] as const;
 
 export default function DesignSystemPage() {
-  return <main className="ds-page">
-    <header className="ds-hero"><div className="ds-container"><nav className="ds-hero-nav"><Brand inverse/><span>Design System · v1.3</span></nav><div className="ds-hero-grid"><div><h1>Trust, made visible.</h1><p>Hệ thống thiết kế thương mại cho một sản phẩm intelligence: mọi quyết định thị giác giúp người dùng phân biệt sự thật, giả định, rủi ro và khoảng trống dữ liệu.</p><div className="ds-hero-actions"><Button href="/reports/demo" tone="accent" size="lg" icon={<BarChart3 size={17}/>}>Xem trong sản phẩm</Button><Button href="/" tone="secondary" size="lg" icon={<ArrowRight size={17}/>}>Trang chủ</Button></div></div><div className="ds-principle"><ShieldCheck size={28}/><strong>Evidence before intelligence</strong><p>Đẹp không được đánh đổi bằng độ tin cậy. Không dùng KPI, chart hoặc status chỉ để trang trí.</p></div></div></div></header>
-    <div className="ds-container ds-content">
-      <section className="ds-section" aria-labelledby="intelligence-system-title"><div className="ds-section-head"><span>1.3</span><div><h2 id="intelligence-system-title">Market Intelligence &amp; GTM</h2><p>Biểu đồ phải giúp so sánh, tìm khoảng trống và kiểm tra giả định; không tạo cảm giác đã có dữ liệu thị trường thật.</p></div></div><div className="ds-rules"><Surface><strong>Customer &amp; competitive maps</strong><p>Điểm cùng kích thước, đánh giá 1–5 và giá theo cấu hình/currency cụ thể. Chọn điểm hoặc nút để mở inspector; có bảng tương đương.</p><Button href="/reports/sample?view=intelligence" tone="secondary">Xem Market Intelligence</Button></Surface><Surface><strong>Funnel, contribution &amp; sensitivity</strong><p>Phễu làm tròn từng cohort, CAC chưa biết khi không có khách và đóng góp có dấu. Ba mức chuyển đổi là kịch bản giả định.</p><Button href="/reports/sample?view=gtm" tone="secondary">Xem GTM Strategy</Button></Surface><Surface><strong>Route, schedule &amp; saved reports</strong><p>Sơ đồ ICP → lời hứa → kênh → gate. Lộ trình 13 tuần có người phụ trách. SVG trên mobile giữ cỡ chữ đọc được; file xuất dùng cùng phiên bản đã lưu.</p></Surface></div></section>
-      <section className="ds-section" aria-labelledby="workbench-system-title"><div className="ds-section-head"><span>1.2</span><div><h2 id="workbench-system-title">Research Workbench</h2><p>Hướng thiết kế được chọn: nền trắng, điều hướng ngang, bảng so sánh và vùng chỉnh giả định. Inter giữ nhịp đọc nhất quán cho tiêu đề, điều khiển và số liệu.</p></div></div><div className="ds-rules"><Surface><strong>One case, connected decisions</strong><p>Overview / Market Intelligence / GTM Strategy / Research report / Economics / Next steps / Launch workspace. Bản nháp và liên kết nguồn được giữ khi đổi mục.</p></Surface><Surface><strong>Assumptions stay explicit</strong><p>Đầu vào gốc không bị ghi đè. Khoản chưa biết, kịch bản đã lưu và nháp chưa lưu có trạng thái riêng.</p></Surface><Surface><strong>Responsive analysis</strong><p>Desktop: vùng phân tích và inspector theo tỉ lệ 2.35:1. Mobile: xếp dọc, bảng cuộn riêng. Nền trắng, divider mảnh, control bo góc 6px.</p></Surface></div><p className="ds-note">Navy #002B67 · Focus #005BC9 · Primary #0061DF · Next action #009EAA. Màu lợi nhuận luôn đi cùng số có dấu; không dùng màu để khẳng định dữ liệu đã xác minh.</p><Button href="/reports/sample" tone="secondary" icon={<ArrowRight size={17}/>}>Mở workspace hoạt động</Button></section>
-      <section className="ds-section" aria-labelledby="brand-source-title">
-        <div className="ds-section-head"><span>TB</span><div><h2 id="brand-source-title">Logo & brand alignment</h2><p>Logo chính thức do chủ thương hiệu cung cấp là nguồn nhận diện gốc. Biểu tượng TB kết nối cobalt → cyan → teal, cùng mũi tên hướng lên và wordmark TrendBridge.</p></div></div>
-        <div className="brand-gradient-band" aria-hidden />
-        <div className="brand-showcase"><figure><img src="/brand/trendbridge-logo.png" width="1254" height="1254" alt="Logo TrendBridge chính thức: biểu tượng TB và chữ TrendBridge"/><figcaption>Full lockup nguyên bản. Giữ hình học, tỉ lệ, màu và khoảng cách giữa biểu tượng với wordmark.</figcaption></figure><figure><Brand inverse/><figcaption>Compact navigation trên nền tối: dùng nền trắng bảo vệ độ tương phản của file gốc. Biểu tượng và wordmark được lấy trực tiếp từ cùng ảnh gốc, không vẽ lại.</figcaption></figure></div>
-        <p className="ds-note">Brand teal dùng cho nhận diện; badge “Đã xác minh” luôn có icon và chữ để phân biệt với màu thương hiệu. Không thêm “AI” vào artwork, không kéo giãn, đổi màu hoặc thêm glow vào logo.</p>
-      </section>
-      <section className="ds-section"><div className="ds-section-head"><span>01</span><div><h2>Foundation</h2><p>True white cho nội dung; midnight tạo trọng lượng; semantic colors chỉ mang một ý nghĩa xuyên suốt.</p></div></div><div className="ds-swatches">{swatches.map(([name,color,use])=><div className="ds-swatch" key={name}><i style={{background:color}}/><div><strong>{name}</strong><code>{color}</code><p>{use}</p></div></div>)}</div></section>
-      <section className="ds-section"><div className="ds-section-head"><span>02</span><div><h2>Typography</h2><p>Manrope tạo tính editorial cho quyết định; Inter tối ưu mật độ và khả năng đọc dữ liệu.</p></div></div><Surface className="ds-type-specimen"><div><span>Display / Manrope 750</span><h3>Từ tín hiệu đến quyết định.</h3></div><div><span>Heading / Manrope 720</span><h4>Bằng chứng thay đổi cách bạn đầu tư.</h4></div><div><span>Body / Inter 400</span><p>Giải thích ngắn, rõ, ưu tiên giới hạn dữ liệu và hành động tiếp theo. Không dùng ngôn ngữ AI phóng đại.</p></div><div><span>Data / Manrope 760</span><strong>22,42%</strong></div></Surface></section>
-      <section className="ds-section"><div className="ds-section-head"><span>03</span><div><h2>Actions & states</h2><p>Một primary action trên mỗi vùng. Trạng thái bằng chứng luôn kết hợp màu, icon và ngôn ngữ.</p></div></div><div className="ds-component-grid"><Surface className="ds-demo"><h3>Buttons</h3><div className="ds-row"><Button icon={<Plus size={15}/>}>Primary</Button><Button tone="accent" icon={<Sparkles size={15}/>}>Accent</Button><Button tone="secondary" icon={<Download size={15}/>}>Secondary</Button><Button tone="ghost">Ghost</Button><Button tone="danger">Delete</Button></div><div className="ds-row"><Button size="sm">Small</Button><Button size="md">Medium</Button><Button size="lg">Large</Button><Button disabled>Disabled</Button></div></Surface><Surface className="ds-demo"><h3>Evidence semantics</h3><div className="ds-stack"><EvidenceBadge tone="verified">Đã xác minh</EvidenceBadge><EvidenceBadge tone="estimated">Ước tính</EvidenceBadge><EvidenceBadge tone="risk">Cần xử lý</EvidenceBadge><EvidenceBadge tone="unavailable">Chưa khả dụng</EvidenceBadge></div><p className="ds-note">Không dùng “verified” cho nội dung do AI tạo hoặc dữ liệu do người dùng cung cấp.</p></Surface></div></section>
-      <section className="ds-section"><div className="ds-section-head"><span>04</span><div><h2>Surfaces & density</h2><p>Open layout cho cấu trúc lớn; panel chỉ dùng khi cần gom một tác vụ hoặc một tập dữ liệu.</p></div></div><div className="ds-elevation-grid"><Surface><span>Base</span><strong>Table, form, analytical region</strong></Surface><Surface elevation="raised"><span>Raised</span><strong>KPI, decision panel</strong></Surface><Surface elevation="floating"><span>Floating</span><strong>Modal, command surface</strong></Surface></div><div className="ds-measures">{Object.entries(trendBridgeTokens.space).map(([key,value])=><div key={key}><i style={{width:value}}/><span>{key} · {value}px</span></div>)}</div></section>
-      <section className="ds-section"><div className="ds-section-head"><span>05</span><div><h2>Data visualization</h2><p>Màu chart ưu tiên khả năng so sánh. Semantic red/amber không dùng cho series trung tính.</p></div></div><Surface className="ds-chart-system"><div className="ds-chart-bars">{trendBridgeTokens.color.chart.map((color,index)=><i key={color} style={{height:`${42+index*13}px`,background:color}}/>)}</div><div><h3>Visualization contract</h3><ul><li>Luôn có đơn vị, phạm vi và thời điểm dữ liệu.</li><li>Empty state thay thế chart khi thiếu bằng chứng.</li><li>Tooltip không được là nơi duy nhất chứa giá trị quan trọng.</li><li>Không dùng 3D, gauge giả chính xác hoặc animation gây hiểu nhầm.</li></ul></div></Surface></section>
-      <section className="ds-section"><div className="ds-section-head"><span>06</span><div><h2>Product voice & accessibility</h2><p>Giọng điệu điềm tĩnh, trực tiếp và có trách nhiệm. WCAG là baseline, không phải phần bổ sung.</p></div></div><div className="ds-rules"><Surface><strong>Write this</strong><p>“Chưa đủ dữ liệu đã xác minh để kết luận nhu cầu.”</p></Surface><Surface><strong>Avoid this</strong><p>“Sản phẩm hot, tiềm năng bùng nổ 93/100.”</p></Surface><Surface><strong>Interaction</strong><p>Focus visible, target tối thiểu 42px, không truyền nghĩa chỉ bằng màu.</p></Surface></div></section>
-    </div>
-    <footer className="ds-footer"><div className="ds-container"><Brand inverse/><p>Commercial design system · Evidence before intelligence · 2026</p></div></footer>
-  </main>;
+  return (
+    <main className="ds-page">
+      <header className="ds-hero">
+        <div className="ds-container">
+          <nav className="ds-hero-nav">
+            <Brand inverse />
+            <span>Design System · v1.4</span>
+          </nav>
+          <div className="ds-hero-grid">
+            <div>
+              <h1>Trust, made visible.</h1>
+              <p>
+                Hệ thống thiết kế thương mại cho một sản phẩm intelligence: mọi
+                quyết định thị giác giúp người dùng phân biệt sự thật, giả định,
+                rủi ro và khoảng trống dữ liệu.
+              </p>
+              <div className="ds-hero-actions">
+                <Button
+                  href="/reports/demo"
+                  tone="accent"
+                  size="lg"
+                  icon={<BarChart3 size={17} />}
+                >
+                  Xem trong sản phẩm
+                </Button>
+                <Button
+                  href="/"
+                  tone="secondary"
+                  size="lg"
+                  icon={<ArrowRight size={17} />}
+                >
+                  Trang chủ
+                </Button>
+              </div>
+            </div>
+            <div className="ds-principle">
+              <ShieldCheck size={28} />
+              <strong>Evidence before intelligence</strong>
+              <p>
+                Đẹp không được đánh đổi bằng độ tin cậy. Không dùng KPI, chart
+                hoặc status chỉ để trang trí.
+              </p>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div className="ds-container ds-content">
+        <section className="ds-section" aria-labelledby="precision-title">
+          <div className="ds-section-head">
+            <span>1.4</span>
+            <div>
+              <h2 id="precision-title">Precision Desk</h2>
+              <p>
+                Hướng hình ảnh đã chọn: nền sáng, rail gọn, bảng và biểu đồ liên
+                kết, inspector bên phải. Chỉnh dữ liệu trong cùng ngữ cảnh phân
+                tích.
+              </p>
+            </div>
+          </div>
+          <div className="ds-rules">
+            <Surface>
+              <strong>Linked analysis</strong>
+              <p>
+                Customer segments / Competition / Market signals. Chọn dòng hoặc
+                điểm để cập nhật khung chi tiết. Điểm là giả định, không phải
+                quy mô thị trường.
+              </p>
+              <Button href="/reports/sample?view=intelligence" tone="secondary">
+                Mở Market Intelligence
+              </Button>
+            </Surface>
+            <Surface>
+              <strong>Contextual inspector</strong>
+              <p>
+                Overview / Edit / Evidence. Desktop cuộn riêng; mobile chỉnh
+                toàn màn hình, giữ focus và hỗ trợ Escape. Thay đổi nằm trong
+                bản nháp đến khi lưu.
+              </p>
+            </Surface>
+            <Surface>
+              <strong>One system, connected strategy</strong>
+              <p>
+                Channel economics / Positioning &amp; offer / Launch roadmap.
+                Scenario thay đổi kết quả mô hình, giữ nguyên đầu vào gốc.
+              </p>
+              <Button href="/reports/sample?view=gtm" tone="secondary">
+                Mở GTM Strategy
+              </Button>
+            </Surface>
+          </div>
+          <p className="ds-note">
+            Ink {trendBridgeTokens.precision.ink} · Selection{" "}
+            {trendBridgeTokens.precision.selection} · Inspector{" "}
+            {trendBridgeTokens.precision.inspector} · Next action{" "}
+            {trendBridgeTokens.precision.nextAction}. Logo gốc được giữ nguyên.
+          </p>
+        </section>
+        <section
+          className="ds-section"
+          aria-labelledby="intelligence-system-title"
+        >
+          <div className="ds-section-head">
+            <span>1.3</span>
+            <div>
+              <h2 id="intelligence-system-title">
+                Market Intelligence &amp; GTM
+              </h2>
+              <p>
+                Biểu đồ phải giúp so sánh, tìm khoảng trống và kiểm tra giả
+                định; không tạo cảm giác đã có dữ liệu thị trường thật.
+              </p>
+            </div>
+          </div>
+          <div className="ds-rules">
+            <Surface>
+              <strong>Customer &amp; competitive maps</strong>
+              <p>
+                Điểm cùng kích thước, đánh giá 1–5 và giá theo cấu hình/currency
+                cụ thể. Chọn điểm hoặc nút để mở inspector; có bảng tương đương.
+              </p>
+              <Button href="/reports/sample?view=intelligence" tone="secondary">
+                Xem Market Intelligence
+              </Button>
+            </Surface>
+            <Surface>
+              <strong>Funnel, contribution &amp; sensitivity</strong>
+              <p>
+                Phễu làm tròn từng cohort, CAC chưa biết khi không có khách và
+                đóng góp có dấu. Ba mức chuyển đổi là kịch bản giả định.
+              </p>
+              <Button href="/reports/sample?view=gtm" tone="secondary">
+                Xem GTM Strategy
+              </Button>
+            </Surface>
+            <Surface>
+              <strong>Route, schedule &amp; saved reports</strong>
+              <p>
+                Sơ đồ ICP → lời hứa → kênh → gate. Lộ trình 13 tuần có người phụ
+                trách. SVG trên mobile giữ cỡ chữ đọc được; file xuất dùng cùng
+                phiên bản đã lưu.
+              </p>
+            </Surface>
+          </div>
+        </section>
+        <section
+          className="ds-section"
+          aria-labelledby="workbench-system-title"
+        >
+          <div className="ds-section-head">
+            <span>1.2</span>
+            <div>
+              <h2 id="workbench-system-title">Research Workbench</h2>
+              <p>
+                Hướng thiết kế được chọn: nền trắng, điều hướng ngang, bảng so
+                sánh và vùng chỉnh giả định. Inter giữ nhịp đọc nhất quán cho
+                tiêu đề, điều khiển và số liệu.
+              </p>
+            </div>
+          </div>
+          <div className="ds-rules">
+            <Surface>
+              <strong>One case, connected decisions</strong>
+              <p>
+                Overview / Market Intelligence / GTM Strategy / Research report
+                / Economics / Next steps / Launch workspace. Bản nháp và liên
+                kết nguồn được giữ khi đổi mục.
+              </p>
+            </Surface>
+            <Surface>
+              <strong>Assumptions stay explicit</strong>
+              <p>
+                Đầu vào gốc không bị ghi đè. Khoản chưa biết, kịch bản đã lưu và
+                nháp chưa lưu có trạng thái riêng.
+              </p>
+            </Surface>
+            <Surface>
+              <strong>Responsive analysis</strong>
+              <p>
+                Desktop: vùng phân tích và inspector theo tỉ lệ 2.35:1. Mobile:
+                xếp dọc, bảng cuộn riêng. Nền trắng, divider mảnh, control bo
+                góc 6px.
+              </p>
+            </Surface>
+          </div>
+          <p className="ds-note">
+            Navy #002B67 · Focus #005BC9 · Primary #0061DF · Next action
+            #009EAA. Màu lợi nhuận luôn đi cùng số có dấu; không dùng màu để
+            khẳng định dữ liệu đã xác minh.
+          </p>
+          <Button
+            href="/reports/sample"
+            tone="secondary"
+            icon={<ArrowRight size={17} />}
+          >
+            Mở workspace hoạt động
+          </Button>
+        </section>
+        <section className="ds-section" aria-labelledby="brand-source-title">
+          <div className="ds-section-head">
+            <span>TB</span>
+            <div>
+              <h2 id="brand-source-title">Logo & brand alignment</h2>
+              <p>
+                Logo chính thức do chủ thương hiệu cung cấp là nguồn nhận diện
+                gốc. Biểu tượng TB kết nối cobalt → cyan → teal, cùng mũi tên
+                hướng lên và wordmark TrendBridge.
+              </p>
+            </div>
+          </div>
+          <div className="brand-gradient-band" aria-hidden />
+          <div className="brand-showcase">
+            <figure>
+              <img
+                src="/brand/trendbridge-logo.png"
+                width="1254"
+                height="1254"
+                alt="Logo TrendBridge chính thức: biểu tượng TB và chữ TrendBridge"
+              />
+              <figcaption>
+                Full lockup nguyên bản. Giữ hình học, tỉ lệ, màu và khoảng cách
+                giữa biểu tượng với wordmark.
+              </figcaption>
+            </figure>
+            <figure>
+              <Brand inverse />
+              <figcaption>
+                Compact navigation trên nền tối: dùng nền trắng bảo vệ độ tương
+                phản của file gốc. Biểu tượng và wordmark được lấy trực tiếp từ
+                cùng ảnh gốc, không vẽ lại.
+              </figcaption>
+            </figure>
+          </div>
+          <p className="ds-note">
+            Brand teal dùng cho nhận diện; badge “Đã xác minh” luôn có icon và
+            chữ để phân biệt với màu thương hiệu. Không thêm “AI” vào artwork,
+            không kéo giãn, đổi màu hoặc thêm glow vào logo.
+          </p>
+        </section>
+        <section className="ds-section">
+          <div className="ds-section-head">
+            <span>01</span>
+            <div>
+              <h2>Foundation</h2>
+              <p>
+                True white cho nội dung; midnight tạo trọng lượng; semantic
+                colors chỉ mang một ý nghĩa xuyên suốt.
+              </p>
+            </div>
+          </div>
+          <div className="ds-swatches">
+            {swatches.map(([name, color, use]) => (
+              <div className="ds-swatch" key={name}>
+                <i style={{ background: color }} />
+                <div>
+                  <strong>{name}</strong>
+                  <code>{color}</code>
+                  <p>{use}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="ds-section">
+          <div className="ds-section-head">
+            <span>02</span>
+            <div>
+              <h2>Typography</h2>
+              <p>
+                Manrope tạo tính editorial cho quyết định; Inter tối ưu mật độ
+                và khả năng đọc dữ liệu.
+              </p>
+            </div>
+          </div>
+          <Surface className="ds-type-specimen">
+            <div>
+              <span>Display / Manrope 750</span>
+              <h3>Từ tín hiệu đến quyết định.</h3>
+            </div>
+            <div>
+              <span>Heading / Manrope 720</span>
+              <h4>Bằng chứng thay đổi cách bạn đầu tư.</h4>
+            </div>
+            <div>
+              <span>Body / Inter 400</span>
+              <p>
+                Giải thích ngắn, rõ, ưu tiên giới hạn dữ liệu và hành động tiếp
+                theo. Không dùng ngôn ngữ AI phóng đại.
+              </p>
+            </div>
+            <div>
+              <span>Data / Manrope 760</span>
+              <strong>22,42%</strong>
+            </div>
+          </Surface>
+        </section>
+        <section className="ds-section">
+          <div className="ds-section-head">
+            <span>03</span>
+            <div>
+              <h2>Actions & states</h2>
+              <p>
+                Một primary action trên mỗi vùng. Trạng thái bằng chứng luôn kết
+                hợp màu, icon và ngôn ngữ.
+              </p>
+            </div>
+          </div>
+          <div className="ds-component-grid">
+            <Surface className="ds-demo">
+              <h3>Buttons</h3>
+              <div className="ds-row">
+                <Button icon={<Plus size={15} />}>Primary</Button>
+                <Button tone="accent" icon={<Sparkles size={15} />}>
+                  Accent
+                </Button>
+                <Button tone="secondary" icon={<Download size={15} />}>
+                  Secondary
+                </Button>
+                <Button tone="ghost">Ghost</Button>
+                <Button tone="danger">Delete</Button>
+              </div>
+              <div className="ds-row">
+                <Button size="sm">Small</Button>
+                <Button size="md">Medium</Button>
+                <Button size="lg">Large</Button>
+                <Button disabled>Disabled</Button>
+              </div>
+            </Surface>
+            <Surface className="ds-demo">
+              <h3>Evidence semantics</h3>
+              <div className="ds-stack">
+                <EvidenceBadge tone="verified">Đã xác minh</EvidenceBadge>
+                <EvidenceBadge tone="estimated">Ước tính</EvidenceBadge>
+                <EvidenceBadge tone="risk">Cần xử lý</EvidenceBadge>
+                <EvidenceBadge tone="unavailable">Chưa khả dụng</EvidenceBadge>
+              </div>
+              <p className="ds-note">
+                Không dùng “verified” cho nội dung do AI tạo hoặc dữ liệu do
+                người dùng cung cấp.
+              </p>
+            </Surface>
+          </div>
+        </section>
+        <section className="ds-section">
+          <div className="ds-section-head">
+            <span>04</span>
+            <div>
+              <h2>Surfaces & density</h2>
+              <p>
+                Open layout cho cấu trúc lớn; panel chỉ dùng khi cần gom một tác
+                vụ hoặc một tập dữ liệu.
+              </p>
+            </div>
+          </div>
+          <div className="ds-elevation-grid">
+            <Surface>
+              <span>Base</span>
+              <strong>Table, form, analytical region</strong>
+            </Surface>
+            <Surface elevation="raised">
+              <span>Raised</span>
+              <strong>KPI, decision panel</strong>
+            </Surface>
+            <Surface elevation="floating">
+              <span>Floating</span>
+              <strong>Modal, command surface</strong>
+            </Surface>
+          </div>
+          <div className="ds-measures">
+            {Object.entries(trendBridgeTokens.space).map(([key, value]) => (
+              <div key={key}>
+                <i style={{ width: value }} />
+                <span>
+                  {key} · {value}px
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+        <section className="ds-section">
+          <div className="ds-section-head">
+            <span>05</span>
+            <div>
+              <h2>Data visualization</h2>
+              <p>
+                Màu chart ưu tiên khả năng so sánh. Semantic red/amber không
+                dùng cho series trung tính.
+              </p>
+            </div>
+          </div>
+          <Surface className="ds-chart-system">
+            <div className="ds-chart-bars">
+              {trendBridgeTokens.color.chart.map((color, index) => (
+                <i
+                  key={color}
+                  style={{ height: `${42 + index * 13}px`, background: color }}
+                />
+              ))}
+            </div>
+            <div>
+              <h3>Visualization contract</h3>
+              <ul>
+                <li>Luôn có đơn vị, phạm vi và thời điểm dữ liệu.</li>
+                <li>Empty state thay thế chart khi thiếu bằng chứng.</li>
+                <li>
+                  Tooltip không được là nơi duy nhất chứa giá trị quan trọng.
+                </li>
+                <li>
+                  Không dùng 3D, gauge giả chính xác hoặc animation gây hiểu
+                  nhầm.
+                </li>
+              </ul>
+            </div>
+          </Surface>
+        </section>
+        <section className="ds-section">
+          <div className="ds-section-head">
+            <span>06</span>
+            <div>
+              <h2>Product voice & accessibility</h2>
+              <p>
+                Giọng điệu điềm tĩnh, trực tiếp và có trách nhiệm. WCAG là
+                baseline, không phải phần bổ sung.
+              </p>
+            </div>
+          </div>
+          <div className="ds-rules">
+            <Surface>
+              <strong>Write this</strong>
+              <p>“Chưa đủ dữ liệu đã xác minh để kết luận nhu cầu.”</p>
+            </Surface>
+            <Surface>
+              <strong>Avoid this</strong>
+              <p>“Sản phẩm hot, tiềm năng bùng nổ 93/100.”</p>
+            </Surface>
+            <Surface>
+              <strong>Interaction</strong>
+              <p>
+                Focus visible, target tối thiểu 42px, không truyền nghĩa chỉ
+                bằng màu.
+              </p>
+            </Surface>
+          </div>
+        </section>
+      </div>
+      <footer className="ds-footer">
+        <div className="ds-container">
+          <Brand inverse />
+          <p>Commercial design system · Evidence before intelligence · 2026</p>
+        </div>
+      </footer>
+    </main>
+  );
 }

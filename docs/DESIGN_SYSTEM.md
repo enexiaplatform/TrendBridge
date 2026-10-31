@@ -1,6 +1,21 @@
 # TrendBridge Design System
 
-Version 1.2 — October 2026
+Version 1.4 — 31 October 2026
+
+## Precision Desk — current case workspace
+
+The owner selected the first displayed visual concept on 31 October 2026. Its light canvas, compact icon rail, navy hierarchy, linked comparison table and pale blue right inspector are the current case design. `app/precision.css` owns this layer and takes precedence over the legacy Research Workbench dimensions below. The original logo remains unchanged.
+
+- Desktop rail/header: 64px. Case scope and navigation remain visible before analysis.
+- Market views: Customer segments / Competition / Market signals. GTM views: Channel economics / Positioning & offer / Launch roadmap. These are contextual views, not additional global destinations.
+- Main grid approximately 1.9:1; the inspector uses independent scrolling. Table, chart and inspector share the same selected ID. Edits immediately update the workspace draft and require the existing save action for persistence.
+- Inspector modes: Overview / Edit / Evidence. At widths up to 800px, editing becomes a full-screen sheet with a contained scroll area, focus containment, Escape and a return action. Normal reading stacks below the analysis.
+- Typography: Inter, 30px case heading, 26px analysis heading, 25px inspector heading, 14px primary data/body. Mobile headings reduce to 21–24px and input text uses 16px.
+- Surface tokens: ink `#092B52`, muted `#566C88`, line `#DFE7F0`, selection `#EDF5FF`, inspector `#F1F8FB`; next action uses `#008A95` for white-label readability. Cobalt remains `#005BC9`. Corresponding catalogue tokens live under `trendBridgeTokens.precision`.
+- Use explicit ratings, signed values and source counts. Do not reproduce inaccurate mockup coordinates or add a simulated market feed. The implementation keeps the existing saved sample values.
+- Wide tables scroll internally. Narrow navigation remains horizontally scrollable. Mobile can return to Library from the account menu and to Workspace from the case back link.
+
+The visual source and comparison evidence are recorded in `design-qa.md`. Backend contracts, owner isolation, report entitlement and Manus activation are outside this visual change.
 
 ## Official logo source
 

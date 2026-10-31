@@ -4,6 +4,7 @@ Global market intelligence and GTM planning: product scope → customer and comp
 
 ## Current implementation
 
+- Precision Desk case design: compact rail, linked chart/table selection, contextual market/GTM views and a scrolling inspector; mobile editing uses a full-screen sheet.
 - English-default core journey, persisted EN/VI interface preference and independent report-language selection.
 - Market/channel/currency scope for US, Vietnam, UK, Germany and Australia. Scope support does not imply live market-data coverage.
 - Persistent product-specific snapshots and research history. No timed processing simulation or fixed report redirect.
