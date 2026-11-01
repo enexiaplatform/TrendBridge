@@ -97,27 +97,32 @@ export async function dispatchPilot(job:PilotJob,input:ResearchInput) {
 }
 export async function reconcilePilot(job:PilotJob) {
   requirePilot(job.owner_id);
-  if(!job.task_id || !active.includes(job.status as (typeof active)[number])) return job;
+  if(!job.task_id || !["running","waiting"].includes(job.status)) return job;
   if(job.last_checked_at && Date.now()-Date.parse(job.last_checked_at)<60_000) return job;
   const provider=adapter();
-  const detail=await provider.detail(job.task_id) as {task?:{status?:string;credit_usage?:number;has_running_background_jobs?:boolean}};
-  const task=detail.task;
-  if(!task) return updateJob(job,{status:"needs_review",error_code:"INVALID_TASK_DETAIL"});
+  // task.detail reports credits and metadata, not lifecycle status. Status is in
+  // task.listMessages -> status_update.agent_status.
+  const detail=await provider.detail(job.task_id) as {task?:{credit_usage?:number}};
+  const messages=await provider.messages(job.task_id) as {messages?:Array<{
+    type?:string;status_update?:{agent_status?:string};
+    structured_output_result?:{success?:boolean;value?:unknown;error?:string}
+  }>;has_more?:boolean};
+  const events=messages.messages ?? [];
+  const status=[...events].reverse().find(m=>m.type==="status_update")?.status_update?.agent_status;
+  const extracted=[...events].reverse().find(m=>m.type==="structured_output_result")?.structured_output_result;
   const base={last_checked_at:new Date().toISOString(),
-    credit_usage:typeof task.credit_usage==="number"?task.credit_usage:job.credit_usage};
-  if(task.status==="waiting")return updateJob(job,{...base,status:"waiting",error_code:"USER_INPUT_REQUIRED"});
-  if(task.status==="error")return updateJob(job,{...base,status:"failed",error_code:"PROVIDER_TASK_ERROR"});
-  if(task.status==="running" || task.has_running_background_jobs) return updateJob(job,{...base,status:"running",error_code:null});
-  if(task.status!=="stopped")return updateJob(job,{...base,status:"needs_review",error_code:"UNKNOWN_PROVIDER_STATE"});
-  const messageResponse=await provider.messages(job.task_id) as {messages?:Array<{type?:string;structured_output_result?:{success?:boolean;value?:unknown;error?:string}}>} ;
-  const extracted=messageResponse.messages?.filter(m=>m.type==="structured_output_result").at(-1)?.structured_output_result;
+    credit_usage:typeof detail.task?.credit_usage==="number"?detail.task.credit_usage:job.credit_usage};
+  if(status==="waiting")return updateJob(job,{...base,status:"waiting",error_code:"USER_INPUT_REQUIRED"});
+  if(status==="error")return updateJob(job,{...base,status:"failed",error_code:"PROVIDER_TASK_ERROR"});
+  if(status==="running" || !status)return updateJob(job,{...base,status:"running",error_code:null});
+  if(status!=="stopped")return updateJob(job,{...base,status:"needs_review",error_code:"UNKNOWN_PROVIDER_STATE"});
+  // Manus may emit structured data after the stopped event. An absent result
+  // cannot be published, and pagination gaps must remain a manual review.
   if(!extracted?.success) return updateJob(job,{...base,status:"needs_review",error_code:"NO_STRUCTURED_RESULT"});
   const validated=validateResearch(extracted.value);
-  if(!validated.data) return updateJob(job,{...base,status:"needs_review",error_code:"SCHEMA_OR_EVIDENCE_FAILURE",quality_issues:validated.issues});
-  // Independent claim-to-page verification is intentionally NOT automated here:
-  // the report stays private and cannot grant a paid entitlement.
+  if(!validated.data)return updateJob(job,{...base,status:"needs_review",error_code:"SCHEMA_OR_EVIDENCE_FAILURE",quality_issues:validated.issues});
   return updateJob(job,{...base,status:"qa_pending",error_code:null,report:validated.data,quality_issues:[{
-    code:"independent_review_required",detail:"Structural validation is not factual source verification."}]});
+    code:"independent_review_required",detail:"Structural checks do not prove remote source accuracy."}]});
 }
 export async function reconcileByTaskId(taskId:string) {
   const job=await findByTaskId(taskId);
