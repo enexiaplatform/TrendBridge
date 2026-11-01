@@ -43,7 +43,7 @@ export function ManusPilotCard({id}:{id:string}) {
       <p role="status"><strong>Status:</strong> {job?.status??"Ready for one controlled test"}</p>
       {job?.credits!==null && job?.credits!==undefined&&<p>Manus credits reported: {job.credits}</p>}
       {job?.errorCode&&<p role="alert">Needs attention: {job.errorCode}</p>}
-      {job?.qualityIssues?.length>0&&<p>QA hold: {job.qualityIssues.map(i=>i.code).join(", ")}. No evidence has been independently verified.</p>}
+      {job && job.qualityIssues.length > 0 && <p>QA hold: {job.qualityIssues.map(i=>i.code).join(", ")}. No evidence has been independently verified.</p>}
       {!job&&<button className="btn btn-primary" disabled={busy} onClick={()=>void action("start")}>Run one Manus research test (may consume credits)</button>}
       {job&&["running","waiting"].includes(job.status)&&<button className="btn btn-outline" disabled={busy} onClick={()=>void action("cancel")}>Stop Manus task</button>}
       {job&&["running","waiting"].includes(job.status)&&<button className="btn btn-outline" disabled={busy} onClick={()=>void load()}>Refresh status</button>}
