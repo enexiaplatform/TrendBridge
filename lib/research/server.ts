@@ -15,7 +15,7 @@ export async function researchContext(createGuest = false) {
       jar.set("tb_guest", owner, { httpOnly: true, sameSite: "lax", secure: false, path: "/", maxAge: 60 * 60 * 24 * 30 });
     }
     const store = localResearchStore();
-    return { owner, testUnlock: true, get: async (id: string) => store.get(owner!, id), list: async () => store.list(owner!), create: async (run: Run) => store.create(run), save: async (run: Run, expectedUpdatedAt: string) => { store.save(run, expectedUpdatedAt); } };
+    return { owner, ownerEmailVerified: null, testUnlock: true, get: async (id: string) => store.get(owner!, id), list: async () => store.list(owner!), create: async (run: Run) => store.create(run), save: async (run: Run, expectedUpdatedAt: string) => { store.save(run, expectedUpdatedAt); } };
   }
   const client = await createClient(); let { data: { user } } = await client.auth.getUser();
   if (!user && createGuest) { const result = await client.auth.signInAnonymously(); if (result.error) throw new ResearchError(401, "Sign in to save your research. Guest access is not enabled on this deployment."); user = result.data.user; }
@@ -24,8 +24,10 @@ export async function researchContext(createGuest = false) {
   const schema = process.env.SUPABASE_RESEARCH_SCHEMA || "public";
   if (schema !== "public" && schema !== "trendbridge") throw new ResearchError(503, "Research storage configuration is invalid.");
   const admin = createAdmin(process.env.NEXT_PUBLIC_SUPABASE_URL!, secret, { auth: { persistSession: false, autoRefreshToken: false } }).schema(schema); const owner = user.id;
+  // Only trust a confirmed Supabase Auth email, never client-provided metadata.
+  const ownerEmailVerified = !user.is_anonymous && user.email_confirmed_at && user.email ? user.email.trim().toLowerCase() : null;
   return {
-    owner, testUnlock: false,
+    owner, ownerEmailVerified, testUnlock: false,
     async get(id: string): Promise<Run | null> { const { data, error } = await admin.from("validation_runs").select("document").eq("owner_id",owner).eq("id",id).maybeSingle(); if(error) throw new ResearchError(503,"Research is temporarily unavailable."); return data?.document ?? null; },
     async list(): Promise<Run[]> { const { data, error } = await admin.from("validation_runs").select("document").eq("owner_id",owner).order("created_at",{ascending:false}).limit(100); if(error) throw new ResearchError(503,"Research history is temporarily unavailable."); return (data ?? []).map(r=>r.document); },
     async create(run: Run): Promise<Run> { const { data, error } = await admin.rpc("create_validation_run", { p_id:run.id, p_owner:owner, p_key:run.requestKey, p_document:run }); if(error) { if(error.message.includes("RATE_LIMIT")) throw new ResearchError(429,"Free snapshot limit reached. Try again later."); throw new ResearchError(503,"Could not save the snapshot."); } return data as Run; },

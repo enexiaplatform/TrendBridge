@@ -8,13 +8,15 @@ export function ManusPilotCard({id}:{id:string}) {
   const [loading,setLoading]=useState(true);
   const [busy,setBusy]=useState(false);
   const [message,setMessage]=useState("");
+  const [blockedBy,setBlockedBy]=useState<"owner"|"configuration"|null>(null);
   const load=useCallback(async()=>{
     try {
       const response=await fetch(`/api/research/${encodeURIComponent(id)}/manus`,{cache:"no-store"});
-      if(response.status===503 || response.status===403){setReady(false);return;}
+      if(response.status===403){setReady(false);setBlockedBy("owner");return;}
+      if(response.status===503){setReady(false);setBlockedBy("configuration");return;}
       if(!response.ok)throw new Error("Unable to check research status");
       const result=await response.json();
-      setReady(true);setJob(result.job??null);
+      setReady(true);setBlockedBy(null);setJob(result.job??null);
     }catch{setReady(false);}finally{setLoading(false);}
   },[id]);
   useEffect(()=>{void load();},[load]);
@@ -38,7 +40,7 @@ export function ManusPilotCard({id}:{id:string}) {
     <h3>Manus AI · private pilot</h3>
     <p className="field-help">Owner-only research test. Results remain private for independent source review. This is not a paid report or verified research.</p>
     {loading?<p role="status">Checking pilot availability…</p>:
-    !ready?<p role="status">Not activated. Add your API key securely in the Vercel server environment; the pilot also requires an owner allowlist, queue migration and explicit activation.</p>:
+    !ready?<p role="status">{blockedBy==="owner" ? <>Private pilot access requires a signed-in, email-confirmed owner account. <a href="/login">Sign in or create an account</a> using the email you configured in Vercel.</> : "Pilot setup is incomplete or disabled. Check the Vercel API key, owner allowlist, queue migration and activation flag."}</p>:
     <div>
       <p role="status"><strong>Status:</strong> {job?.status??"Ready for one controlled test"}</p>
       {job?.credits!==null && job?.credits!==undefined&&<p>Manus credits reported: {job.credits}</p>}

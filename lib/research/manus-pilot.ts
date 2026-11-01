@@ -4,6 +4,7 @@ import { ManusAdapter } from "./manus";
 import { validateResearch } from "./contract";
 import type { ResearchInput } from "./contract";
 import { ResearchError } from "./server";
+import { matchesPilotOwner } from "./pilot-identity";
 
 export type PilotStatus = "queued" | "dispatching" | "running" | "waiting" | "qa_pending" | "needs_review" | "failed" | "cancelled";
 export type PilotJob = {
@@ -22,12 +23,21 @@ export const pilotConfig = () => ({
   storage: process.env.SUPABASE_RESEARCH_SCHEMA === "trendbridge" &&
     Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SECRET_KEY),
 });
-export function pilotEnabled(ownerId?: string) {
+export function pilotEnabled(ownerId?: string, ownerEmailVerified?: string | null) {
   const config = pilotConfig();
-  return Object.values(config).every(Boolean) && Boolean(ownerId && ownerId === process.env.MANUS_PILOT_OWNER_ID);
+  return Object.values(config).every(Boolean) &&
+    Boolean(ownerId && matchesPilotOwner(ownerId, ownerEmailVerified, process.env.MANUS_PILOT_OWNER_ID));
 }
-export function requirePilot(ownerId: string) {
-  if (!pilotEnabled(ownerId)) throw new ResearchError(503,"The private Manus pilot is not enabled for this account.");
+export function requirePilot(ownerId: string, ownerEmailVerified?: string | null) {
+  if (!pilotEnabled(ownerId, ownerEmailVerified))
+    throw new ResearchError(403,"Sign in with the confirmed private pilot owner account, and verify pilot configuration.");
+}
+/** Internal-only methods operate on service-owned jobs already created by an authorized user.
+ * Signed webhooks do not have an end-user session, so they cannot re-check email.
+ */
+function requirePilotRuntime() {
+  if (!Object.values(pilotConfig()).every(Boolean))
+    throw new ResearchError(503,"The Manus pilot is not configured or enabled.");
 }
 export function pilotDb() {
   const config = pilotConfig();
@@ -64,8 +74,8 @@ async function updateJob(job:PilotJob,patch:Record<string,unknown>): Promise<Pil
   if(!data) throw new ResearchError(409,"Research job was updated concurrently.");
   return data as PilotJob;
 }
-export async function enqueuePilot(ownerId:string,runId:string) {
-  requirePilot(ownerId);
+export async function enqueuePilot(ownerId:string,runId:string,ownerEmailVerified?:string|null) {
+  requirePilot(ownerId,ownerEmailVerified);
   const {data,error}=await pilotDb().rpc("enqueue_manus_job",{p_run:runId,p_owner:ownerId});
   if(error) {
     if(error.message.includes("MANUS_DAILY_LIMIT"))throw new ResearchError(429,"Pilot limit: one Manus task per 24 hours.");
@@ -76,7 +86,7 @@ export async function enqueuePilot(ownerId:string,runId:string) {
   return data as PilotJob;
 }
 export async function dispatchPilot(job:PilotJob,input:ResearchInput) {
-  requirePilot(job.owner_id);
+  requirePilotRuntime();
   if (job.status !== "queued") return job;
   const {data,error}=await pilotDb().rpc("claim_manus_job",{p_job:job.id});
   if(error) throw new ResearchError(503,"Could not claim pilot job.");
@@ -96,7 +106,7 @@ export async function dispatchPilot(job:PilotJob,input:ResearchInput) {
   }
 }
 export async function reconcilePilot(job:PilotJob) {
-  requirePilot(job.owner_id);
+  requirePilotRuntime();
   if(!job.task_id || !["running","waiting"].includes(job.status)) return job;
   if(job.last_checked_at && Date.now()-Date.parse(job.last_checked_at)<60_000) return job;
   const provider=adapter();
@@ -130,7 +140,7 @@ export async function reconcileByTaskId(taskId:string) {
   return reconcilePilot(job);
 }
 export async function stopPilot(job:PilotJob) {
-  requirePilot(job.owner_id);
+  requirePilotRuntime();
   if (!job.task_id || terminal.includes(job.status as (typeof terminal)[number]))
     return job;
   await adapter().stop(job.task_id);
