@@ -40,7 +40,7 @@ export class ManusAdapter {
   }
   create(input: ResearchInput) { return this.request("task.create", manusRequest(input)); }
   detail(id: string) { return this.request(`task.detail?task_id=${encodeURIComponent(id)}`); }
-  messages(id: string) { return this.request(`task.listMessages?task_id=${encodeURIComponent(id)}&order=asc&limit=100`); }
+  messages(id: string) { return this.request(`task.listMessages?task_id=${encodeURIComponent(id)}&order=desc&limit=100`); }
   stop(id: string) { return this.request("task.stop", {task_id:id}); }
   async publicKey(): Promise<{public_key:string}> {
     const result=await this.request("webhook.publicKey");
