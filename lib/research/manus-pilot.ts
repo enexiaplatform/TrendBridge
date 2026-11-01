@@ -108,8 +108,8 @@ export async function reconcilePilot(job:PilotJob) {
     structured_output_result?:{success?:boolean;value?:unknown;error?:string}
   }>;has_more?:boolean};
   const events=messages.messages ?? [];
-  const status=[...events].reverse().find(m=>m.type==="status_update")?.status_update?.agent_status;
-  const extracted=[...events].reverse().find(m=>m.type==="structured_output_result")?.structured_output_result;
+  const status=events.find(m=>m.type==="status_update")?.status_update?.agent_status;
+  const extracted=events.find(m=>m.type==="structured_output_result")?.structured_output_result;
   const base={last_checked_at:new Date().toISOString(),
     credit_usage:typeof detail.task?.credit_usage==="number"?detail.task.credit_usage:job.credit_usage};
   if(status==="waiting")return updateJob(job,{...base,status:"waiting",error_code:"USER_INPUT_REQUIRED"});
